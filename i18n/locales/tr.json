@@ -1,0 +1,154 @@
+{
+  "nav": {
+    "about": "Hakkımda",
+    "projects": "Projeler",
+    "references": "Referanslar",
+    "articles": "Yazılar",
+    "contact": "İletişim"
+  },
+  "hero": {
+    "eyebrow": "Kim bu dijital gölge?",
+    "name": "Kişisel Portfolyom",
+    "subtitle": "Ben Emre",
+    "roles": ["Dijital Antropolog", "Araştırmacı & Yazar", "Düşünce Üreticisi", "AI & Kültür Analisti"],
+    "cta": "Hakkımda Keşfet",
+    "scroll": "Kaydır"
+  },
+  "about": {
+    "label": "Hakkımda",
+    "title": "Dijitalin içinden",
+    "bio1": "Teknoloji, kültür ve insan ilişkilerinin kesişim noktasında çalışan bir araştırmacı ve yazarım. Dijital dönüşümün toplumsal etkilerini anlamaya ve anlatmaya çalışıyorum.",
+    "bio2": "10 yılı aşkın süredir teknoloji ve kültür alanında araştırmalar yapıyor, yazılar yazıyor ve projeler geliştiriyorum. Yapay zeka, dijital kültür ve insan-teknoloji etkileşimi ana ilgi alanlarım.",
+    "bio3": "Çalışmalarımda akademik derinliği günlük yaşamla buluşturmayı hedefliyorum.",
+    "expertiseTitle": "Uzmanlık Alanları",
+    "interestsTitle": "İlgi Alanları",
+    "expertise": {
+      "digitalAnthropology": "Dijital Antropoloji",
+      "aiPhilosophy": "AI & Teknoloji Felsefesi",
+      "culturalAnalysis": "Kültürel Analiz",
+      "contentCreation": "İçerik Üretimi",
+      "research": "Araştırma & Yazarlık"
+    },
+    "interests": {
+      "ai": "Yapay Zeka",
+      "cyberCulture": "Siber Kültür",
+      "philosophy": "Felsefe",
+      "sciFi": "Bilim Kurgu",
+      "mythology": "Mitoloji"
+    },
+    "stats": {
+      "years": "Yıl Deneyim",
+      "articles": "Makale",
+      "fields": "Alan"
+    }
+  },
+  "projects": {
+    "label": "Projeler",
+    "title": "Araştırma & Düşünce",
+    "subtitle": "Dijital çağın kültürel dokusunu inceleyen çalışmalar.",
+    "readMore": "Devamını Oku",
+    "medeniyet": {
+      "title": "Medeniyet: Kelimenin Antropolojik Kökeni",
+      "description": "Medeniyetin dilsel ve kültürel evrimini inceleyen kapsamlı bir araştırma projesi. Kelimenin kökeninden bugüne uzanan anlam serüveni."
+    },
+    "etzHayim": {
+      "title": "Etz Hayim ve Evrenin Yaratılışı Üzerine",
+      "description": "Mistik geleneklerde evrenin yaratılış mitolojisinin modern bilimle kesişimi. Kabala'dan günümüze kozmolojik bir yolculuk."
+    },
+    "akis": {
+      "title": "'Akış': Bir Sosyal Medya Teriminin Anatomisi",
+      "description": "Dijital çağda 'akış' kavramının sosyolojik ve psikolojik analizi. Sosyal medyanın dil üzerindeki dönüştürücü etkisi."
+    },
+    "veri": {
+      "title": "Veri İçinde Kaybolmak: Modern İnsan ve Dijital Hafıza",
+      "description": "Dijitalleşen dünyada hafıza, kimlik ve bilgi saklama üzerine felsefi bir deneme. Veri bolluğunda insanın konumu."
+    }
+  },
+  "testimonials": {
+    "label": "Referanslar",
+    "title": "Dijital ağdaki bağlantılar",
+    "ayse": {
+      "quote": "Emre'nin çalışmaları, teknoloji ve insan ilişkisini derinlemesine anlayan nadir eserlerden. Hem akademik titizliği hem de yaratıcı bakış açısını bir araya getiriyor.",
+      "title": "Dijital Antropoloji Profesörü"
+    },
+    "mehmet": {
+      "quote": "Projelerinde gösterdiği detay ve derinlik etkileyici. Dijital dönüşüm konusunda danışmanlığı paha biçilemez.",
+      "title": "Teknoloji Girişimcisi"
+    },
+    "zeynep": {
+      "quote": "Emre'nin yazıları, karmaşık konuları herkesin anlayabileceği bir dille anlatıyor. Hem bilgilendirici hem ilham verici.",
+      "title": "Kültür Araştırmacısı"
+    }
+  },
+  "articles": {
+    "label": "Yazılar",
+    "title": "Düşünceler & Analizler",
+    "subtitle": "Dijital kültür, teknoloji ve felsefe üzerine derinlemesine okumalar.",
+    "readMore": "Devamını Oku →",
+    "readMin": "dk okuma",
+    "digitalShadow": {
+      "title": "Dijital Gölge: Bizi Takip Eden Veriler",
+      "excerpt": "Her tıklama, her arama, her paylaşım... Dijital ayak izlerimiz bizi nasıl tanımlıyor? Verinin kimlik üzerindeki görünmez etkisi."
+    },
+    "aiCreativity": {
+      "title": "Yapay Zeka ve Yaratıcılık Paradoksu",
+      "excerpt": "AI araçları yaratıcılığı öldürüyor mu, yoksa yeni kapılar mı açıyor? İnsan-makine yaratıcılığının karmaşık dansı."
+    },
+    "metaverse": {
+      "title": "Metaverse: Kaçış mı, Evrim mi?",
+      "excerpt": "Sanal dünyalar gerçekliğin yerini mi alıyor, yoksa onu mu genişletiyor? Dijital varoluşun felsefi boyutları."
+    }
+  },
+  "voice": {
+    "label": "Sesli Asistan",
+    "title": "Benimle Konuş",
+    "tagline": "Benimle Konuş",
+    "subtitle": "Mikrofona tıkla, soru sor. Yapay zeka destekli asistanım sana Emre'nin çalışmaları hakkında yanıt verecek.",
+    "orbSubtitle": "Mikrofona tıkla veya aşağıdaki kutuya yaz. Portfolyo AI yardımcısı sana Emre'nin çalışmaları hakkında yanıt verecek.",
+    "speakBtn": "Konuş",
+    "start": "Dinlemeye Başla",
+    "stop": "Durdur",
+    "processing": "Yanıt hazırlanıyor...",
+    "listening": "Dinliyorum...",
+    "transcriptLabel": "Sen dedin:",
+    "responseLabel": "Yanıt:",
+    "notSupported": "Tarayıcınız ses tanımayı desteklemiyor. Lütfen güncel bir Chrome veya Edge kullanın.",
+    "clickToStart": "Başlamak için tıkla",
+    "errorMic": "Mikrofon izni reddedildi. Lütfen tarayıcı ayarlarından izin verin.",
+    "errorNoSpeech": "Ses algılanamadı. Lütfen tekrar deneyin.",
+    "textFallbackLabel": "Yazarak da sorabilirsiniz:",
+    "textPlaceholder": "Sorunuzu buraya yazın...",
+    "stopSpeaking": "Sesi Durdur"
+  },
+  "chat": {
+    "title": "Portfolyo AI",
+    "online": "Çevrimiçi",
+    "welcome": "Merhaba! Ben Emre'nin portfolyo sitesindeki AI yardımcısıyım. Projeler, araştırmalar veya çalışmalar hakkında soru sorabilirsin.",
+    "placeholder": "Bir şeyler sor...",
+    "error": "Üzgünüm, bir hata oluştu. Lütfen tekrar dene."
+  },
+  "contact": {
+    "label": "İletişim",
+    "title": "Birlikte çalışalım",
+    "subtitle": "Yeni projeler, araştırma işbirlikleri veya sadece bir fikir alışverişi için ulaşabilirsin.",
+    "location": "Lokasyon",
+    "social": "Sosyal Medya",
+    "copyright": "Tüm hakları saklıdır",
+    "form": {
+      "name": "İsim",
+      "namePlaceholder": "Adın",
+      "email": "E-posta",
+      "emailPlaceholder": "ornek{'@'}mail.com",
+      "message": "Mesaj",
+      "messagePlaceholder": "Düşüncelerini yaz...",
+      "submit": "Gönder",
+      "sending": "Gönderiliyor...",
+      "success": "Mesajın alındı, teşekkürler!",
+      "error": "Bir hata oluştu, tekrar dene."
+    },
+    "info": {
+      "email": "iletisim{'@'}emre.com",
+      "location": "İstanbul, Türkiye"
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "nav": {
+    "about": "About",
+    "projects": "Projects",
+    "references": "References",
+    "articles": "Articles",
+    "contact": "Contact"
+  },
+  "hero": {
+    "eyebrow": "Who is this digital shadow?",
+    "name": "My Portfolio",
+    "subtitle": "I'm Emre",
+    "roles": ["Digital Anthropologist", "Researcher & Writer", "Thought Producer", "AI & Culture Analyst"],
+    "cta": "Explore My Work",
+    "scroll": "Scroll"
+  },
+  "about": {
+    "label": "About",
+    "title": "From within the digital",
+    "bio1": "I am a researcher and writer working at the intersection of technology, culture, and human relations. I strive to understand and communicate the societal impacts of digital transformation.",
+    "bio2": "For over a decade, I have been conducting research, writing essays, and developing projects in the fields of technology and culture. Artificial intelligence, digital culture, and human-technology interaction are my primary areas of focus.",
+    "bio3": "In my work, I aim to bridge academic depth with everyday life.",
+    "expertiseTitle": "Areas of Expertise",
+    "interestsTitle": "Interests",
+    "expertise": {
+      "digitalAnthropology": "Digital Anthropology",
+      "aiPhilosophy": "AI & Philosophy of Technology",
+      "culturalAnalysis": "Cultural Analysis",
+      "contentCreation": "Content Creation",
+      "research": "Research & Writing"
+    },
+    "interests": {
+      "ai": "Artificial Intelligence",
+      "cyberCulture": "Cyber Culture",
+      "philosophy": "Philosophy",
+      "sciFi": "Science Fiction",
+      "mythology": "Mythology"
+    },
+    "stats": {
+      "years": "Years Experience",
+      "articles": "Articles",
+      "fields": "Fields"
+    }
+  },
+  "projects": {
+    "label": "Projects",
+    "title": "Research & Thought",
+    "subtitle": "Works examining the cultural fabric of the digital age.",
+    "readMore": "Read More",
+    "medeniyet": {
+      "title": "Civilization: The Anthropological Root of a Word",
+      "description": "A comprehensive research project examining the linguistic and cultural evolution of civilization. The journey of meaning from its origins to today."
+    },
+    "etzHayim": {
+      "title": "On Etz Hayim and the Creation of the Universe",
+      "description": "The intersection of creation mythology in mystical traditions with modern science. A cosmological journey from Kabbalah to the present day."
+    },
+    "akis": {
+      "title": "'Flow': The Anatomy of a Social Media Term",
+      "description": "A sociological and psychological analysis of the concept of 'flow' in the digital age. The transformative effect of social media on language."
+    },
+    "veri": {
+      "title": "Lost in Data: Modern Humans and Digital Memory",
+      "description": "A philosophical essay on memory, identity, and knowledge storage in a digitalizing world. The position of humanity amid data abundance."
+    }
+  },
+  "testimonials": {
+    "label": "References",
+    "title": "Connections in the digital network",
+    "ayse": {
+      "quote": "Emre's work is among the rare pieces that deeply understand the relationship between technology and humanity. It brings together academic rigor with a creative perspective.",
+      "title": "Professor of Digital Anthropology"
+    },
+    "mehmet": {
+      "quote": "The detail and depth he demonstrates in his projects is impressive. His consulting on digital transformation is invaluable.",
+      "title": "Technology Entrepreneur"
+    },
+    "zeynep": {
+      "quote": "Emre's writings explain complex topics in a language that everyone can understand. Both informative and inspiring.",
+      "title": "Cultural Researcher"
+    }
+  },
+  "articles": {
+    "label": "Articles",
+    "title": "Thoughts & Analyses",
+    "subtitle": "In-depth readings on digital culture, technology, and philosophy.",
+    "readMore": "Read More →",
+    "readMin": "min read",
+    "digitalShadow": {
+      "title": "Digital Shadow: The Data That Follows Us",
+      "excerpt": "Every click, every search, every share... How do our digital footprints define us? The invisible effect of data on identity."
+    },
+    "aiCreativity": {
+      "title": "Artificial Intelligence and the Creativity Paradox",
+      "excerpt": "Are AI tools killing creativity, or opening new doors? The complex dance of human-machine creativity."
+    },
+    "metaverse": {
+      "title": "Metaverse: Escape or Evolution?",
+      "excerpt": "Are virtual worlds replacing reality, or expanding it? The philosophical dimensions of digital existence."
+    }
+  },
+  "voice": {
+    "label": "Voice Assistant",
+    "title": "Talk to Me",
+    "tagline": "Talk to Me",
+    "subtitle": "Click the microphone and ask a question. My AI-powered assistant will answer about Emre's work.",
+    "orbSubtitle": "Click the microphone or type below. The Portfolio AI helper will answer about Emre's work.",
+    "speakBtn": "Speak",
+    "start": "Start Listening",
+    "stop": "Stop",
+    "processing": "Preparing response...",
+    "listening": "Listening...",
+    "transcriptLabel": "You said:",
+    "responseLabel": "Response:",
+    "notSupported": "Your browser doesn't support speech recognition. Please use an up-to-date Chrome or Edge.",
+    "clickToStart": "Click to start",
+    "errorMic": "Microphone permission denied. Please allow in browser settings.",
+    "errorNoSpeech": "No speech detected. Please try again.",
+    "textFallbackLabel": "You can also type your question:",
+    "textPlaceholder": "Type your question here...",
+    "stopSpeaking": "Stop Speaking"
+  },
+  "chat": {
+    "title": "Portfolio AI",
+    "online": "Online",
+    "welcome": "Hi! I'm the AI helper on Emre's portfolio site. You can ask me about his projects, research, or work.",
+    "placeholder": "Ask something...",
+    "error": "Sorry, an error occurred. Please try again."
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Let's work together",
+    "subtitle": "Feel free to reach out for new projects, research collaborations, or just an exchange of ideas.",
+    "location": "Location",
+    "social": "Social Media",
+    "copyright": "All rights reserved",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "example@mail.com",
+      "message": "Message",
+      "messagePlaceholder": "Write your thoughts...",
+      "submit": "Send",
+      "sending": "Sending...",
+      "success": "Your message was received, thank you!",
+      "error": "An error occurred, please try again."
+    },
+    "info": {
+      "email": "contact@emre.com",
+      "location": "Istanbul, Turkey"
+    }
+  }
+}

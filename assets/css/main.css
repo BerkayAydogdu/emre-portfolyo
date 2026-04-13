@@ -1,0 +1,182 @@
+/* ─── Design Tokens — Dark (default) ────────────────────────────── */
+:root {
+  --bg:             #050508;
+  --surface:        #0f0f1a;
+  --border-subtle:  #1e1b3a;
+  --primary:        #7c3aed;
+  --primary-glow:   #a78bfa;
+  --accent:         #c4b5fd;
+  --text-base:      #f8fafc;
+  --text-muted:     #94a3b8;
+  --glow-shadow:    0 0 40px rgba(124, 58, 237, 0.3);
+  --glow-border:    1px solid rgba(167, 139, 250, 0.2);
+  --glass-bg:       rgba(15, 15, 26, 0.8);
+  --nav-scrolled-bg: rgba(5, 5, 8, 0.85);
+}
+
+/* ─── Design Tokens — Light ─────────────────────────────────────── */
+.light {
+  --bg:             #f8fafc;
+  --surface:        #ffffff;
+  --border-subtle:  #e2e8f0;
+  --primary:        #7c3aed;
+  --primary-glow:   #7c3aed;
+  --accent:         #6d28d9;
+  --text-base:      #0f172a;
+  --text-muted:     #475569;
+  --glow-shadow:    0 0 40px rgba(124, 58, 237, 0.12);
+  --glow-border:    1px solid rgba(124, 58, 237, 0.15);
+  --glass-bg:       rgba(255, 255, 255, 0.85);
+  --nav-scrolled-bg: rgba(248, 250, 252, 0.9);
+}
+
+.light ::-webkit-scrollbar-track { background: #f8fafc; }
+.light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+.light ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ─── Base ───────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-base);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+}
+
+/* ─── Selection ─────────────────────────────────────────────────── */
+::selection {
+  background: rgba(124, 58, 237, 0.4);
+  color: #f8fafc;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* ─── Glassmorphism util ────────────────────────────────────────── */
+.glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: var(--glass-bg);
+  border: var(--glow-border);
+}
+
+/* ─── Glow effects ──────────────────────────────────────────────── */
+.glow-box {
+  box-shadow: var(--glow-shadow);
+}
+
+.glow-text {
+  text-shadow: 0 0 30px rgba(167, 139, 250, 0.5);
+}
+
+/* ─── Section layout ────────────────────────────────────────────── */
+.section {
+  padding: 6rem 1.5rem;
+}
+
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ─── Section heading ───────────────────────────────────────────── */
+.section-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--primary-glow);
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-base);
+}
+
+/* ─── Grid pattern bg ───────────────────────────────────────────── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.light .grid-bg {
+  background-image:
+    linear-gradient(rgba(124, 58, 237, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.07) 1px, transparent 1px);
+}
+
+/* ─── Tag pill ──────────────────────────────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(124, 58, 237, 0.12);
+  color: var(--accent);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+/* ─── Transitions ───────────────────────────────────────────────── */
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* ─── Chat bubble pulse ring ────────────────────────────────────── */
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* ─── Waveform bars ─────────────────────────────────────────────── */
+@keyframes wave-bar {
+  0%, 100% { height: 4px; }
+  50%       { height: 28px; }
+}
