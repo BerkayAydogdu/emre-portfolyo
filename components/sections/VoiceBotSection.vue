@@ -1,5 +1,8 @@
 <template>
   <section id="voice" ref="sectionEl" class="voice-section">
+    <!-- Soundwave Particles Background -->
+    <canvas ref="canvasEl" class="voice-canvas" aria-hidden="true" />
+
     <!-- Background radial glow -->
     <div class="bg-glow" aria-hidden="true" />
 
@@ -152,6 +155,7 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useVoiceBot } from '~/composables/useVoiceBot'
+import { useParticles } from '~/composables/useParticles'
 
 const { locale } = useI18n()
 const {
@@ -175,6 +179,30 @@ const orbWrapEl = ref<HTMLElement>()
 const textEl = ref<HTMLElement>()
 const btnEl = ref<HTMLElement>()
 
+const canvasEl = ref<HTMLCanvasElement>()
+const { initCanvas, destroy, emitSoundwave } = useParticles({ particleDensityMultiplier: 0.65, maxDistance: 130 })
+let waveInterval: ReturnType<typeof setInterval> | null = null
+
+watch([isSpeaking, isProcessing], ([speaking, processing]) => {
+  if (!import.meta.client) return
+  if (speaking || processing) {
+    if (!waveInterval) {
+      waveInterval = setInterval(() => {
+        const localX = sectionEl.value ? sectionEl.value.clientWidth / 2 : window.innerWidth / 2
+        // Orb is vertically roughly in middle of the top section:
+        const localY = sectionEl.value ? sectionEl.value.clientHeight * 0.45 : window.innerHeight / 2
+        
+        emitSoundwave(localX, localY)
+      }, speaking ? 600 : 1500) // Emit pulse rapidly when speaking, slowly when processing
+    }
+  } else {
+    if (waveInterval) {
+      clearInterval(waveInterval)
+      waveInterval = null
+    }
+  }
+})
+
 function handleToggle() {
   const lang = locale.value === 'tr' ? 'tr-TR' : 'en-US'
   toggle(lang)
@@ -190,6 +218,9 @@ function handleTextSubmit() {
 
 onMounted(() => {
   mounted.value = true
+  if (canvasEl.value) {
+    initCanvas(canvasEl.value)
+  }
 
   const st = { trigger: sectionEl.value, start: 'top 72%' }
 
@@ -234,9 +265,22 @@ onMounted(() => {
     })
   }
 })
+
+onUnmounted(() => {
+  destroy()
+  if (waveInterval) clearInterval(waveInterval)
+})
 </script>
 
 <style scoped>
+/* ─── Particles Canvas ────────────────────────────────────── */
+.voice-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* ─── Section ─────────────────────────────────────────────── */
 .voice-section {
   position: relative;

@@ -11,6 +11,7 @@ export function useVoiceBot() {
   const speechFailed = ref(false)
   const recognition = shallowRef<any>(null)
   const error = ref('')
+  const audioEngine = ref<HTMLAudioElement | null>(null)
 
   const { chat } = useCloudflareAI()
 
@@ -152,14 +153,52 @@ export function useVoiceBot() {
     }
   }
 
-  function speak(text: string, lang: 'tr-TR' | 'en-US' = 'tr-TR') {
+  async function speak(text: string, lang: 'tr-TR' | 'en-US' = 'tr-TR') {
+    if (!import.meta.client) return
+    
+    stopSpeaking()
+
+    try {
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, lang })
+      })
+
+      if (!response.ok) {
+        throw new Error('ElevenLabs API returned an error, falling back to Browser TTS.')
+      }
+
+      const blob = await response.blob()
+      const audioUrl = URL.createObjectURL(blob)
+      
+      const audio = new Audio(audioUrl)
+      audioEngine.value = audio
+      
+      audio.onplay = () => { isSpeaking.value = true }
+      audio.onended = () => { 
+        isSpeaking.value = false
+        URL.revokeObjectURL(audioUrl)
+      }
+      audio.onerror = () => { 
+        isSpeaking.value = false
+        URL.revokeObjectURL(audioUrl)
+      }
+      
+      await audio.play()
+    } catch (e) {
+      console.warn('Network TTS failed, using offline fallback', e)
+      fallbackSpeak(text, lang)
+    }
+  }
+
+  function fallbackSpeak(text: string, lang: 'tr-TR' | 'en-US' = 'tr-TR') {
     if (!import.meta.client || !window.speechSynthesis) return
     window.speechSynthesis.cancel()
     const utt = new SpeechSynthesisUtterance(text)
     utt.lang = lang
     utt.rate = 0.95
 
-    // Try to find a voice matching the language
     const voices = window.speechSynthesis.getVoices()
     const langVoice = voices.find((v) => v.lang.startsWith(lang.slice(0, 2)))
     if (langVoice) utt.voice = langVoice
@@ -172,8 +211,18 @@ export function useVoiceBot() {
   }
 
   function stopSpeaking() {
-    if (!import.meta.client || !window.speechSynthesis) return
-    window.speechSynthesis.cancel()
+    if (!import.meta.client) return
+    
+    if (audioEngine.value) {
+      audioEngine.value.pause()
+      audioEngine.value.currentTime = 0
+      audioEngine.value = null
+    }
+
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+    }
+    
     isSpeaking.value = false
   }
 
@@ -188,7 +237,7 @@ export function useVoiceBot() {
   onUnmounted(() => {
     try { recognition.value?.stop() } catch {}
     if (import.meta.client) {
-      try { window.speechSynthesis?.cancel() } catch {}
+      stopSpeaking()
     }
   })
 

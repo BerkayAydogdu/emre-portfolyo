@@ -35,18 +35,25 @@
 
 <script setup lang="ts">
 import { gsap } from 'gsap'
+import { useParticles } from '~/composables/useParticles'
 
-const { t } = useI18n()
+const { t, tm, rt } = useI18n()
 const canvasEl = ref<HTMLCanvasElement>()
 const displayedRole = ref('')
 
-// ─── Typed text (letter by letter, sequential) ────────────────────
+const { initCanvas, destroy } = useParticles()
+
+// ─── Typed text ───────────────────────────────────────────────────
 let roleIndex = 0
 let charIndex = 0
 let isDeleting = false
 let typingTimer: ReturnType<typeof setTimeout>
 
-const roles = computed<string[]>(() => t('hero.roles') as unknown as string[])
+const roles = computed<string[]>(() => {
+  const messages = tm('hero.roles')
+  if (Array.isArray(messages)) return messages.map(m => rt(m))
+  return []
+})
 
 function typeRole() {
   const role = roles.value[roleIndex]
@@ -67,234 +74,6 @@ function typeRole() {
     }
   }
   typingTimer = setTimeout(typeRole, isDeleting ? 35 : 65)
-}
-
-// ─── Advanced Particle System ─────────────────────────────────────
-const PARTICLE_COLORS = [
-  [167, 139, 250], // violet
-  [124, 58, 237],  // purple
-  [6, 182, 212],   // cyan
-  [192, 132, 252], // light violet
-  [99, 102, 241],  // indigo
-]
-
-class Particle {
-  x: number
-  y: number
-  baseX: number
-  baseY: number
-  vx: number
-  vy: number
-  radius: number
-  color: number[]
-  alpha: number
-  density: number
-
-  constructor(w: number, h: number) {
-    this.x = Math.random() * w
-    this.y = Math.random() * h
-    this.baseX = this.x
-    this.baseY = this.y
-    this.vx = (Math.random() - 0.5) * 0.3
-    this.vy = (Math.random() - 0.5) * 0.3
-    this.radius = Math.random() * 2 + 0.5
-    this.color = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)]
-    this.alpha = Math.random() * 0.5 + 0.2
-    this.density = Math.random() * 30 + 10
-  }
-
-  update(mouseX: number, mouseY: number, mouseActive: boolean, w: number, h: number) {
-    // Mouse repel effect
-    if (mouseActive) {
-      const dx = this.x - mouseX
-      const dy = this.y - mouseY
-      const dist = Math.sqrt(dx * dx + dy * dy)
-      const REPEL_RADIUS = 120
-      if (dist < REPEL_RADIUS) {
-        const force = (REPEL_RADIUS - dist) / REPEL_RADIUS
-        const angle = Math.atan2(dy, dx)
-        this.vx += Math.cos(angle) * force * 2
-        this.vy += Math.sin(angle) * force * 2
-      }
-    }
-
-    // Velocity with friction
-    this.vx *= 0.96
-    this.vy *= 0.96
-
-    // Drift back to base position gently
-    const driftX = (this.baseX - this.x) * 0.005
-    const driftY = (this.baseY - this.y) * 0.005
-    this.vx += driftX
-    this.vy += driftY
-
-    // Add tiny random movement
-    this.vx += (Math.random() - 0.5) * 0.05
-    this.vy += (Math.random() - 0.5) * 0.05
-
-    // Apply velocity
-    this.x += this.vx
-    this.y += this.vy
-
-    // Wrap edges
-    if (this.x < -10) this.x = w + 10
-    if (this.x > w + 10) this.x = -10
-    if (this.y < -10) this.y = h + 10
-    if (this.y > h + 10) this.y = -10
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    const [r, g, b] = this.color
-    ctx.beginPath()
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.alpha})`
-    ctx.fill()
-  }
-}
-
-let particles: Particle[] = []
-let animFrame: number
-let ctx: CanvasRenderingContext2D | null = null
-let mouseX = -1000
-let mouseY = -1000
-let mouseActive = false
-
-function getParticleCount() {
-  const w = window.innerWidth
-  if (w < 600) return 80
-  if (w < 1024) return 140
-  return 220
-}
-
-function initCanvas() {
-  const canvas = canvasEl.value
-  if (!canvas) return
-  ctx = canvas.getContext('2d')
-  resize()
-  drawLoop()
-}
-
-function resize() {
-  const canvas = canvasEl.value
-  if (!canvas) return
-  const dpr = Math.min(window.devicePixelRatio, 2)
-  canvas.width = window.innerWidth * dpr
-  canvas.height = window.innerHeight * dpr
-  canvas.style.width = window.innerWidth + 'px'
-  canvas.style.height = window.innerHeight + 'px'
-  ctx?.scale(dpr, dpr)
-
-  // Respawn particles on resize
-  spawnParticles()
-}
-
-function spawnParticles() {
-  const w = window.innerWidth
-  const h = window.innerHeight
-  const count = getParticleCount()
-  particles = Array.from({ length: count }, () => new Particle(w, h))
-}
-
-function burstParticles(x: number, y: number) {
-  const BURST_COUNT = 15
-  const w = window.innerWidth
-  const h = window.innerHeight
-  for (let i = 0; i < BURST_COUNT; i++) {
-    const p = new Particle(w, h)
-    p.x = x
-    p.y = y
-    p.baseX = x + (Math.random() - 0.5) * 200
-    p.baseY = y + (Math.random() - 0.5) * 200
-    const angle = (Math.PI * 2 * i) / BURST_COUNT
-    const speed = Math.random() * 4 + 2
-    p.vx = Math.cos(angle) * speed
-    p.vy = Math.sin(angle) * speed
-    p.radius = Math.random() * 2.5 + 1
-    p.alpha = 0.8
-    particles.push(p)
-  }
-
-  // Keep particle count reasonable
-  if (particles.length > getParticleCount() + 100) {
-    particles.splice(0, particles.length - getParticleCount())
-  }
-}
-
-function drawLoop() {
-  const canvas = canvasEl.value
-  if (!canvas || !ctx) return
-
-  const w = window.innerWidth
-  const h = window.innerHeight
-
-  ctx.clearRect(0, 0, w, h)
-
-  // Update and draw particles
-  for (const p of particles) {
-    p.update(mouseX, mouseY, mouseActive, w, h)
-    p.draw(ctx)
-  }
-
-  // Draw connections
-  const MAX_DIST = 100
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x
-      const dy = particles[i].y - particles[j].y
-      const distSq = dx * dx + dy * dy
-      if (distSq < MAX_DIST * MAX_DIST) {
-        const dist = Math.sqrt(distSq)
-        const alpha = (1 - dist / MAX_DIST) * 0.12
-        ctx.beginPath()
-        ctx.moveTo(particles[i].x, particles[i].y)
-        ctx.lineTo(particles[j].x, particles[j].y)
-        ctx.strokeStyle = `rgba(124, 58, 237, ${alpha})`
-        ctx.lineWidth = 0.6
-        ctx.stroke()
-      }
-    }
-  }
-
-  // Draw mouse glow
-  if (mouseActive) {
-    const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 120)
-    gradient.addColorStop(0, 'rgba(124, 58, 237, 0.06)')
-    gradient.addColorStop(1, 'rgba(124, 58, 237, 0)')
-    ctx.fillStyle = gradient
-    ctx.fillRect(mouseX - 120, mouseY - 120, 240, 240)
-  }
-
-  animFrame = requestAnimationFrame(drawLoop)
-}
-
-function onMouseMove(e: MouseEvent) {
-  mouseX = e.clientX
-  mouseY = e.clientY
-  mouseActive = true
-}
-
-function onMouseLeave() {
-  mouseActive = false
-  mouseX = -1000
-  mouseY = -1000
-}
-
-function onClick(e: MouseEvent) {
-  burstParticles(e.clientX, e.clientY)
-}
-
-function onTouchMove(e: TouchEvent) {
-  if (e.touches.length > 0) {
-    mouseX = e.touches[0].clientX
-    mouseY = e.touches[0].clientY
-    mouseActive = true
-  }
-}
-
-function onTouchEnd() {
-  mouseActive = false
-  mouseX = -1000
-  mouseY = -1000
 }
 
 // ─── GSAP entrance ────────────────────────────────────────────────
@@ -320,25 +99,15 @@ function scrollToAbout() {
 }
 
 onMounted(() => {
-  initCanvas()
+  if (canvasEl.value) {
+    initCanvas(canvasEl.value)
+  }
   runEntrance()
-  window.addEventListener('resize', resize)
-  window.addEventListener('mousemove', onMouseMove)
-  window.addEventListener('mouseleave', onMouseLeave)
-  window.addEventListener('click', onClick)
-  window.addEventListener('touchmove', onTouchMove, { passive: true })
-  window.addEventListener('touchend', onTouchEnd)
 })
 
 onUnmounted(() => {
-  cancelAnimationFrame(animFrame)
+  destroy()
   clearTimeout(typingTimer)
-  window.removeEventListener('resize', resize)
-  window.removeEventListener('mousemove', onMouseMove)
-  window.removeEventListener('mouseleave', onMouseLeave)
-  window.removeEventListener('click', onClick)
-  window.removeEventListener('touchmove', onTouchMove)
-  window.removeEventListener('touchend', onTouchEnd)
 })
 </script>
 
@@ -477,7 +246,6 @@ onUnmounted(() => {
   50%       { transform: translateY(4px); }
 }
 
-/* Scroll indicator */
 .scroll-indicator {
   position: absolute;
   bottom: 2.5rem;
