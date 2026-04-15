@@ -8,7 +8,7 @@
       </a>
 
       <!-- Desktop nav -->
-      <nav class="desktop-nav" aria-label="Main navigation">
+      <nav v-if="isHomePage" class="desktop-nav" aria-label="Main navigation">
         <a
           v-for="link in links"
           :key="link.href"
@@ -27,6 +27,7 @@
         <LangToggle />
         <!-- Mobile menu button -->
         <button
+          v-if="isHomePage"
           class="mobile-menu-btn"
           :aria-label="menuOpen ? 'Close menu' : 'Open menu'"
           @click="menuOpen = !menuOpen"
@@ -59,9 +60,17 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
 const isScrolled = ref(false)
 const menuOpen = ref(false)
 const activeSection = ref('hero')
+
+const isHomePage = computed(() => route.path === '/')
 
 const links = [
   { href: '#about',       labelKey: 'nav.about' },
@@ -72,12 +81,22 @@ const links = [
 ]
 
 function scrollTo(href: string) {
+  if (route.path !== '/') {
+    router.push('/' + href)
+    menuOpen.value = false
+    return
+  }
   const el = document.querySelector(href)
   el?.scrollIntoView({ behavior: 'smooth' })
   menuOpen.value = false
 }
 
 function mobileNav(href: string) {
+  if (route.path !== '/') {
+    router.push('/' + href)
+    menuOpen.value = false
+    return
+  }
   menuOpen.value = false
   setTimeout(() => scrollTo(href), 50)
 }

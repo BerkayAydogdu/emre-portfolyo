@@ -1,4 +1,4 @@
-import type { Project, Testimonial, Article, Expertise } from './usePortfolioData'
+import type { Project, Testimonial, Article, Expertise, SocialCard } from './usePortfolioData'
 
 interface PortfolioDataRaw {
   photo?: string
@@ -8,6 +8,7 @@ interface PortfolioDataRaw {
   expertise: Expertise[]
   interests: string[]
   stats: Array<{ value: string; labelKey: string }>
+  socials: SocialCard[]
 }
 
 /**
@@ -30,6 +31,7 @@ export function usePortfolioDataRuntime() {
   const expertise = computed(() => data.value?.expertise ?? static_.expertise)
   const interests = computed(() => data.value?.interests ?? static_.interests)
   const stats = computed(() => data.value?.stats ?? static_.stats)
+  const socials = computed(() => data.value?.socials ?? static_.socials)
 
-  return { photo, projects, testimonials, articles, expertise, interests, stats, status }
+  return { photo, projects, testimonials, articles, expertise, interests, stats, socials, status }
 }

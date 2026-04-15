@@ -10,27 +10,11 @@
         </div>
       </div>
 
-      <div class="sidebar-section-label">İçerik</div>
-      <nav class="sidebar-nav">
-        <NuxtLink to="/admin/content/tr" class="nav-item" :class="{ active: route.path === '/admin/content/tr' }">
-          <span class="nav-flag">🇹🇷</span>
-          <span>Türkçe İçerik</span>
-        </NuxtLink>
-        <NuxtLink to="/admin/content/en" class="nav-item" :class="{ active: route.path === '/admin/content/en' }">
-          <span class="nav-flag">🇬🇧</span>
-          <span>English Content</span>
-        </NuxtLink>
-        <NuxtLink to="/admin/portfolio-data" class="nav-item" :class="{ active: route.path === '/admin/portfolio-data' }">
-          <UIcon name="i-lucide-layers" class="nav-icon" />
-          <span>Projeler & Veriler</span>
-        </NuxtLink>
-      </nav>
-
-      <div class="sidebar-section-label">Genel</div>
+      <div class="sidebar-section-label">Editör</div>
       <nav class="sidebar-nav">
         <NuxtLink to="/admin" class="nav-item" :class="{ active: route.path === '/admin' }">
           <UIcon name="i-lucide-layout-dashboard" class="nav-icon" />
-          <span>Dashboard</span>
+          <span>Tüm İçerikler</span>
         </NuxtLink>
         <a href="/" target="_blank" class="nav-item nav-external">
           <UIcon name="i-lucide-external-link" class="nav-icon" />
@@ -67,16 +51,17 @@ async function logout() {
 .admin-shell {
   display: flex;
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--text-base);
+  background: #f1f5f9;
+  color: #0f172a;
+  font-family: 'Inter', sans-serif;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────────── */
 .admin-sidebar {
-  width: 220px;
+  width: 230px;
   flex-shrink: 0;
-  background: #0a0a14;
-  border-right: 1px solid var(--border-subtle);
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -90,39 +75,38 @@ async function logout() {
   align-items: center;
   gap: 10px;
   padding: 20px 16px;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .brand-icon {
-  font-size: 22px;
+  font-size: 20px;
   width: 36px;
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(124, 58, 237, 0.15);
+  background: #ede9fe;
   border-radius: 8px;
 }
 
 .brand-name {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
   font-weight: 700;
-  color: var(--text-base);
+  color: #0f172a;
 }
 
 .brand-sub {
   font-size: 11px;
-  color: var(--text-muted);
+  color: #94a3b8;
   margin-top: 1px;
 }
 
 .sidebar-section-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted);
+  color: #94a3b8;
   padding: 16px 16px 6px;
 }
 
@@ -141,20 +125,20 @@ async function logout() {
   padding: 9px 10px;
   border-radius: 8px;
   font-size: 13.5px;
-  color: var(--text-muted);
+  color: #64748b;
   text-decoration: none;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
 
 .nav-item:hover {
-  background: rgba(124, 58, 237, 0.08);
-  color: var(--text-base);
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 .nav-item.active {
-  background: rgba(124, 58, 237, 0.18);
-  color: var(--accent);
+  background: #ede9fe;
+  color: #6d28d9;
   font-weight: 600;
 }
 
@@ -175,7 +159,7 @@ async function logout() {
 .sidebar-footer {
   margin-top: auto;
   padding: 12px 8px 16px;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid #e2e8f0;
 }
 
 .logout-btn {
@@ -186,7 +170,7 @@ async function logout() {
   padding: 9px 10px;
   border-radius: 8px;
   font-size: 13.5px;
-  color: var(--text-muted);
+  color: #64748b;
   background: none;
   border: none;
   cursor: pointer;
@@ -194,8 +178,8 @@ async function logout() {
 }
 
 .logout-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
-  color: #f87171;
+  background: #fee2e2;
+  color: #dc2626;
 }
 
 /* ── Main ────────────────────────────────────────────────────────── */
@@ -207,31 +191,4 @@ async function logout() {
 }
 </style>
 
-<!-- Global dark overrides for all inputs inside the admin panel -->
-<style>
-.admin-main input,
-.admin-main textarea {
-  background-color: #0d0d1a !important;
-  color: #f8fafc !important;
-  border-color: #1e1b3a !important;
-}
 
-.admin-main input:focus,
-.admin-main textarea:focus {
-  border-color: #7c3aed !important;
-  outline: none !important;
-  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25) !important;
-}
-
-.admin-main input::placeholder,
-.admin-main textarea::placeholder {
-  color: #475569 !important;
-}
-
-.admin-main input:disabled,
-.admin-main textarea:disabled {
-  background-color: #080810 !important;
-  color: #334155 !important;
-  cursor: not-allowed;
-}
-</style>

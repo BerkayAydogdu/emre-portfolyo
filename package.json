@@ -13,6 +13,7 @@
     "@nuxt/ui": "^3.0.2",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/i18n": "^9.3.0",
+    "@vercel/blob": "^2.3.3",
     "@vercel/kv": "^3.0.0",
     "@vueuse/motion": "^2.2.6",
     "gsap": "^3.12.7",

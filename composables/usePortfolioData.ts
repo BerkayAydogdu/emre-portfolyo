@@ -26,11 +26,27 @@ export interface Article {
   date: string
   readMinutes: number
   slug: string
+  /** 'dusunce' for thought pieces, 'analiz' for analysis */
+  type: 'dusunce' | 'analiz'
+  /** Optional cover image path e.g. '/images/articles/ornek.jpg' */
+  image?: string
 }
 
 export interface Expertise {
   key: string
   icon: string
+}
+
+export interface SocialCard {
+  id: string
+  platform: string
+  type: 'instagram' | 'x' | 'medium' | 'linkedin'
+  handle: string
+  text?: string
+  title?: string
+  image?: string
+  icon: string
+  url: string
 }
 
 export function usePortfolioData() {
@@ -106,6 +122,8 @@ export function usePortfolioData() {
       date: '2024-03-15',
       readMinutes: 8,
       slug: 'dijital-golge-bizi-takip-eden-veriler',
+      type: 'analiz',
+      image: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=600&auto=format&fit=crop',
     },
     {
       id: 'ai-yaraticilik',
@@ -115,6 +133,7 @@ export function usePortfolioData() {
       date: '2024-02-02',
       readMinutes: 6,
       slug: 'yapay-zeka-ve-yaraticilik-paradoksu',
+      type: 'dusunce',
     },
     {
       id: 'metaverse',
@@ -124,6 +143,7 @@ export function usePortfolioData() {
       date: '2024-01-20',
       readMinutes: 10,
       slug: 'metaverse-kacis-mi-evrim-mi',
+      type: 'dusunce',
     },
   ]
 
@@ -149,5 +169,45 @@ export function usePortfolioData() {
     { value: '3', labelKey: 'about.stats.fields' },
   ]
 
-  return { projects, testimonials, articles, expertise, interests, stats }
+  const socials: SocialCard[] = [
+    {
+      id: 'soc-1',
+      platform: 'Instagram',
+      type: 'instagram',
+      handle: '@emre.dijital',
+      image: 'https://images.unsplash.com/photo-1616469829581-73993eb86b02?q=80&w=600&auto=format&fit=crop',
+      icon: 'i-simple-icons-instagram',
+      url: 'https://instagram.com'
+    },
+    {
+      id: 'soc-2',
+      platform: 'X',
+      type: 'x',
+      handle: '@dijitalgolge',
+      text: '"Gerçeklik, kodların değil, insanların ona yüklediği anlamların üzerinde inşa edilir." — Yeni makalem yayında 👇',
+      icon: 'i-simple-icons-x',
+      url: 'https://twitter.com'
+    },
+    {
+      id: 'soc-3',
+      platform: 'Medium',
+      type: 'medium',
+      handle: 'Emre Öncü',
+      title: 'Yapay Zeka Çağında Antropoloji: İnsan Ne Yana Düşer?',
+      image: 'https://images.unsplash.com/photo-1620712948343-0008ce8a568b?q=80&w=600&auto=format&fit=crop',
+      icon: 'i-simple-icons-medium',
+      url: 'https://medium.com'
+    },
+    {
+      id: 'soc-4',
+      platform: 'LinkedIn',
+      type: 'linkedin',
+      handle: 'Emre',
+      title: 'Dijital Antropolog | UX Danışmanı | Teknoloji & İnsan Araştırmacısı',
+      icon: 'i-simple-icons-linkedin',
+      url: 'https://linkedin.com'
+    }
+  ]
+
+  return { projects, testimonials, articles, expertise, interests, stats, socials }
 }

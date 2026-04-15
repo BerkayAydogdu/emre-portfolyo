@@ -51,28 +51,18 @@ const localeSchema = z.object({
     title: z.string(),
     subtitle: z.string(),
     readMore: z.string(),
-    medeniyet: z.object({ title: z.string(), description: z.string() }),
-    etzHayim: z.object({ title: z.string(), description: z.string() }),
-    akis: z.object({ title: z.string(), description: z.string() }),
-    veri: z.object({ title: z.string(), description: z.string() }),
-  }),
+  }).catchall(z.unknown()),
   testimonials: z.object({
     label: z.string(),
     title: z.string(),
-    ayse: z.object({ quote: z.string(), title: z.string() }),
-    mehmet: z.object({ quote: z.string(), title: z.string() }),
-    zeynep: z.object({ quote: z.string(), title: z.string() }),
-  }),
+  }).catchall(z.unknown()),
   articles: z.object({
     label: z.string(),
     title: z.string(),
     subtitle: z.string(),
     readMore: z.string(),
     readMin: z.string(),
-    digitalShadow: z.object({ title: z.string(), excerpt: z.string() }),
-    aiCreativity: z.object({ title: z.string(), excerpt: z.string() }),
-    metaverse: z.object({ title: z.string(), excerpt: z.string() }),
-  }),
+  }).catchall(z.unknown()),
   voice: z.object({
     label: z.string(),
     title: z.string(),
@@ -140,6 +130,7 @@ const projectSchema = z.object({
   tags: z.array(z.string()),
   type: z.enum(['arastirma', 'yazi']).default('arastirma'),
   image: z.string().optional(),
+  body: z.string().optional(),
 })
 
 const testimonialSchema = z.object({
@@ -158,6 +149,9 @@ const articleSchema = z.object({
   date: z.string(),
   readMinutes: z.number(),
   slug: z.string(),
+  type: z.enum(['dusunce', 'analiz']).default('dusunce'),
+  image: z.string().optional(),
+  body: z.string().optional(),
 })
 
 const expertiseSchema = z.object({
@@ -170,6 +164,18 @@ const statSchema = z.object({
   labelKey: z.string(),
 })
 
+const socialCardSchema = z.object({
+  id: z.string(),
+  platform: z.string(),
+  type: z.enum(['instagram', 'x', 'medium', 'linkedin']).default('instagram'),
+  handle: z.string(),
+  text: z.string().optional(),
+  title: z.string().optional(),
+  image: z.string().optional(),
+  icon: z.string(),
+  url: z.string(),
+})
+
 const portfolioDataSchema = z.object({
   photo: z.string().optional(),
   projects: z.array(projectSchema),
@@ -178,6 +184,7 @@ const portfolioDataSchema = z.object({
   expertise: z.array(expertiseSchema),
   interests: z.array(z.string()),
   stats: z.array(statSchema),
+  socials: z.array(socialCardSchema),
 })
 
 export { portfolioDataSchema }

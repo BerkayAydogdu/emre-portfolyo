@@ -3,9 +3,11 @@
     <HeroSection />
     <VoiceBotSection />
     <AboutSection />
-    <ProjectsSection />
+    <SocialMarquee />
+    
+    <DigitalMindApp />
+    
     <TestimonialsSection />
-    <ArticlesSection />
     <ContactSection />
   </div>
 </template>

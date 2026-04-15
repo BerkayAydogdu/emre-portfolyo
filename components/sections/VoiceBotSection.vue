@@ -522,7 +522,7 @@ onUnmounted(() => {
 
 .fallback-input {
   flex: 1;
-  background: rgba(15, 15, 26, 0.6);
+  background: var(--surface);
   border: 1px solid rgba(6, 182, 212, 0.25);
   border-radius: 9999px;
   padding: 0.75rem 1.25rem;
@@ -587,7 +587,7 @@ onUnmounted(() => {
 }
 
 .result-box {
-  background: rgba(15, 15, 26, 0.7);
+  background: var(--surface);
   border: 1px solid rgba(6, 182, 212, 0.15);
   border-radius: 1rem;
   padding: 1.125rem 1.375rem;
