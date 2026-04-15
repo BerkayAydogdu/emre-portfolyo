@@ -4,6 +4,8 @@ export interface Project {
   descriptionKey: string
   category: string
   tags: string[]
+  /** 'arastirma' for research items, 'yazi' for writings */
+  type: 'arastirma' | 'yazi'
   /** Optional image path relative to /public  e.g. '/images/projects/medeniyet.jpg' */
   image?: string
 }
@@ -38,6 +40,7 @@ export function usePortfolioData() {
       titleKey: 'projects.medeniyet.title',
       descriptionKey: 'projects.medeniyet.description',
       category: 'Araştırma',
+      type: 'arastirma',
       tags: ['Antropoloji', 'Dil', 'Kültür'],
       // image: '/images/projects/medeniyet.jpg',
     },
@@ -46,6 +49,7 @@ export function usePortfolioData() {
       titleKey: 'projects.etzHayim.title',
       descriptionKey: 'projects.etzHayim.description',
       category: 'Felsefe',
+      type: 'arastirma',
       tags: ['Mistisizm', 'Kozmoloji', 'Felsefe'],
       // image: '/images/projects/etz-hayim.jpg',
     },
@@ -54,6 +58,7 @@ export function usePortfolioData() {
       titleKey: 'projects.akis.title',
       descriptionKey: 'projects.akis.description',
       category: 'Dijital Kültür',
+      type: 'yazi',
       tags: ['Sosyal Medya', 'Psikoloji', 'Teknoloji'],
       // image: '/images/projects/akis.jpg',
     },
@@ -62,6 +67,7 @@ export function usePortfolioData() {
       titleKey: 'projects.veri.title',
       descriptionKey: 'projects.veri.description',
       category: 'Teknoloji',
+      type: 'yazi',
       tags: ['AI', 'Hafıza', 'Gelecek'],
       // image: '/images/projects/veri.jpg',
     },

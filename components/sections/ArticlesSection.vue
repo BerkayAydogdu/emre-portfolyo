@@ -42,9 +42,7 @@
 
 <script setup lang="ts">
 import { gsap } from 'gsap'
-import { usePortfolioData } from '~/composables/usePortfolioData'
-
-const { articles } = usePortfolioData()
+const { articles } = usePortfolioDataRuntime()
 const { locale } = useI18n()
 
 const headerEl = ref<HTMLElement>()

@@ -1,0 +1,182 @@
+export interface FieldDef {
+  path: string
+  label: string
+  hint?: string
+  type: 'input' | 'textarea' | 'list'
+}
+
+export interface SectionDef {
+  key: string
+  label: string
+  description: string
+  icon: string
+  fields: FieldDef[]
+}
+
+export const CONTENT_SCHEMA: SectionDef[] = [
+  {
+    key: 'nav',
+    label: 'Navigasyon Menüsü',
+    description: 'Sayfanın üst menüsündeki linklerin yazıları',
+    icon: 'i-lucide-menu',
+    fields: [
+      { path: 'nav.about', label: 'Hakkımda', type: 'input' },
+      { path: 'nav.projects', label: 'Projeler', type: 'input' },
+      { path: 'nav.references', label: 'Referanslar', type: 'input' },
+      { path: 'nav.articles', label: 'Yazılar', type: 'input' },
+      { path: 'nav.contact', label: 'İletişim', type: 'input' },
+    ],
+  },
+  {
+    key: 'hero',
+    label: 'Açılış (Hero) Bölümü',
+    description: 'Sayfayı ilk açtığında görünen büyük başlık alanı',
+    icon: 'i-lucide-sparkles',
+    fields: [
+      { path: 'hero.eyebrow', label: 'Üst Küçük Yazı', hint: 'Başlığın üstündeki küçük metin', type: 'input' },
+      { path: 'hero.name', label: 'Ana Başlık', type: 'input' },
+      { path: 'hero.subtitle', label: 'İsim / Alt Başlık', type: 'input' },
+      { path: 'hero.cta', label: 'Buton Yazısı', hint: '"Hakkımda Keşfet" butonu', type: 'input' },
+      { path: 'hero.scroll', label: 'Kaydır Yazısı', hint: 'En alttaki ok animasyonunun yanındaki yazı', type: 'input' },
+      { path: 'hero.roles', label: 'Dönen Rol Listesi', hint: 'Bir altına bir sırayla görünen unvan yazıları', type: 'list' },
+    ],
+  },
+  {
+    key: 'about',
+    label: 'Hakkımda Bölümü',
+    description: 'Biyografi, uzmanlık alanları ve istatistikler',
+    icon: 'i-lucide-user',
+    fields: [
+      { path: 'about.label', label: 'Bölüm Etiketi', hint: 'Bölümün üstündeki küçük etiket', type: 'input' },
+      { path: 'about.title', label: 'Bölüm Başlığı', type: 'input' },
+      { path: 'about.bio1', label: 'Biyografi Paragraf 1', type: 'textarea' },
+      { path: 'about.bio2', label: 'Biyografi Paragraf 2', type: 'textarea' },
+      { path: 'about.bio3', label: 'Biyografi Paragraf 3', type: 'textarea' },
+      { path: 'about.expertiseTitle', label: '"Uzmanlık Alanları" Başlığı', type: 'input' },
+      { path: 'about.interestsTitle', label: '"İlgi Alanları" Başlığı', type: 'input' },
+      { path: 'about.expertise.digitalAnthropology', label: 'Uzmanlık 1 — Dijital Antropoloji', type: 'input' },
+      { path: 'about.expertise.aiPhilosophy', label: 'Uzmanlık 2 — AI & Felsefe', type: 'input' },
+      { path: 'about.expertise.culturalAnalysis', label: 'Uzmanlık 3 — Kültürel Analiz', type: 'input' },
+      { path: 'about.expertise.contentCreation', label: 'Uzmanlık 4 — İçerik Üretimi', type: 'input' },
+      { path: 'about.expertise.research', label: 'Uzmanlık 5 — Araştırma', type: 'input' },
+      { path: 'about.interests.ai', label: 'İlgi 1 — Yapay Zeka', type: 'input' },
+      { path: 'about.interests.cyberCulture', label: 'İlgi 2 — Siber Kültür', type: 'input' },
+      { path: 'about.interests.philosophy', label: 'İlgi 3 — Felsefe', type: 'input' },
+      { path: 'about.interests.sciFi', label: 'İlgi 4 — Bilim Kurgu', type: 'input' },
+      { path: 'about.interests.mythology', label: 'İlgi 5 — Mitoloji', type: 'input' },
+      { path: 'about.stats.years', label: 'İstatistik — Yıl Deneyim etiketi', hint: 'Örn: "Yıl Deneyim"', type: 'input' },
+      { path: 'about.stats.articles', label: 'İstatistik — Makale etiketi', hint: 'Örn: "Makale"', type: 'input' },
+      { path: 'about.stats.fields', label: 'İstatistik — Alan etiketi', hint: 'Örn: "Alan"', type: 'input' },
+    ],
+  },
+  {
+    key: 'projects',
+    label: 'Projeler Bölümü',
+    description: 'Araştırma ve düşünce projelerinin başlık ve açıklamaları',
+    icon: 'i-lucide-folder-open',
+    fields: [
+      { path: 'projects.label', label: 'Bölüm Etiketi', type: 'input' },
+      { path: 'projects.title', label: 'Bölüm Başlığı', type: 'input' },
+      { path: 'projects.subtitle', label: 'Bölüm Alt Başlık Açıklaması', type: 'textarea' },
+      { path: 'projects.readMore', label: '"Devamını Oku" Butonu', type: 'input' },
+      { path: 'projects.medeniyet.title', label: 'Proje 1 Başlığı — Medeniyet', type: 'input' },
+      { path: 'projects.medeniyet.description', label: 'Proje 1 Açıklaması — Medeniyet', type: 'textarea' },
+      { path: 'projects.etzHayim.title', label: 'Proje 2 Başlığı — Etz Hayim', type: 'input' },
+      { path: 'projects.etzHayim.description', label: 'Proje 2 Açıklaması — Etz Hayim', type: 'textarea' },
+      { path: 'projects.akis.title', label: 'Proje 3 Başlığı — Akış', type: 'input' },
+      { path: 'projects.akis.description', label: 'Proje 3 Açıklaması — Akış', type: 'textarea' },
+      { path: 'projects.veri.title', label: 'Proje 4 Başlığı — Veri', type: 'input' },
+      { path: 'projects.veri.description', label: 'Proje 4 Açıklaması — Veri', type: 'textarea' },
+    ],
+  },
+  {
+    key: 'testimonials',
+    label: 'Referanslar Bölümü',
+    description: 'Kişilerin alıntıları ve unvanları',
+    icon: 'i-lucide-quote',
+    fields: [
+      { path: 'testimonials.label', label: 'Bölüm Etiketi', type: 'input' },
+      { path: 'testimonials.title', label: 'Bölüm Başlığı', type: 'input' },
+      { path: 'testimonials.ayse.quote', label: 'Ayşe — Alıntı Metni', type: 'textarea' },
+      { path: 'testimonials.ayse.title', label: 'Ayşe — Unvan', hint: 'Örn: "Dijital Antropoloji Profesörü"', type: 'input' },
+      { path: 'testimonials.mehmet.quote', label: 'Mehmet — Alıntı Metni', type: 'textarea' },
+      { path: 'testimonials.mehmet.title', label: 'Mehmet — Unvan', type: 'input' },
+      { path: 'testimonials.zeynep.quote', label: 'Zeynep — Alıntı Metni', type: 'textarea' },
+      { path: 'testimonials.zeynep.title', label: 'Zeynep — Unvan', type: 'input' },
+    ],
+  },
+  {
+    key: 'articles',
+    label: 'Yazılar Bölümü',
+    description: 'Blog yazılarının başlık ve özet metinleri',
+    icon: 'i-lucide-newspaper',
+    fields: [
+      { path: 'articles.label', label: 'Bölüm Etiketi', type: 'input' },
+      { path: 'articles.title', label: 'Bölüm Başlığı', type: 'input' },
+      { path: 'articles.subtitle', label: 'Bölüm Alt Başlığı', type: 'textarea' },
+      { path: 'articles.readMore', label: '"Devamını Oku" Linki', type: 'input' },
+      { path: 'articles.readMin', label: '"Dakika Okuma" Etiketi', hint: 'Örn: "dk okuma"', type: 'input' },
+      { path: 'articles.digitalShadow.title', label: 'Yazı 1 Başlığı — Dijital Gölge', type: 'input' },
+      { path: 'articles.digitalShadow.excerpt', label: 'Yazı 1 Özeti — Dijital Gölge', type: 'textarea' },
+      { path: 'articles.aiCreativity.title', label: 'Yazı 2 Başlığı — AI & Yaratıcılık', type: 'input' },
+      { path: 'articles.aiCreativity.excerpt', label: 'Yazı 2 Özeti — AI & Yaratıcılık', type: 'textarea' },
+      { path: 'articles.metaverse.title', label: 'Yazı 3 Başlığı — Metaverse', type: 'input' },
+      { path: 'articles.metaverse.excerpt', label: 'Yazı 3 Özeti — Metaverse', type: 'textarea' },
+    ],
+  },
+  {
+    key: 'voice',
+    label: 'Sesli Asistan Bölümü',
+    description: 'Mikrofon ve ses asistanı ile ilgili tüm yazılar',
+    icon: 'i-lucide-mic',
+    fields: [
+      { path: 'voice.label', label: 'Bölüm Etiketi', type: 'input' },
+      { path: 'voice.title', label: 'Bölüm Başlığı', type: 'input' },
+      { path: 'voice.tagline', label: 'Tagline', type: 'input' },
+      { path: 'voice.subtitle', label: 'Alt Başlık Açıklaması', type: 'textarea' },
+      { path: 'voice.orbSubtitle', label: 'Orb Açıklama Metni', hint: 'Mikrofon topunun altındaki açıklama', type: 'textarea' },
+      { path: 'voice.speakBtn', label: '"Konuş" Butonu', type: 'input' },
+      { path: 'voice.start', label: '"Dinlemeye Başla" Butonu', type: 'input' },
+      { path: 'voice.stop', label: '"Durdur" Butonu', type: 'input' },
+      { path: 'voice.processing', label: 'Yanıt Hazırlanıyor Yazısı', type: 'input' },
+      { path: 'voice.listening', label: 'Dinliyor Yazısı', type: 'input' },
+      { path: 'voice.stopSpeaking', label: '"Sesi Durdur" Butonu', type: 'input' },
+    ],
+  },
+  {
+    key: 'chat',
+    label: 'Sohbet (Chat) Bölümü',
+    description: 'Sağ alttaki AI sohbet balonunun metinleri',
+    icon: 'i-lucide-message-circle',
+    fields: [
+      { path: 'chat.title', label: 'Sohbet Başlığı', hint: 'Örn: "Portfolyo AI"', type: 'input' },
+      { path: 'chat.online', label: '"Çevrimiçi" Etiketi', type: 'input' },
+      { path: 'chat.welcome', label: 'Karşılama Mesajı', hint: 'Sohbet açıldığında ilk gelen mesaj', type: 'textarea' },
+      { path: 'chat.placeholder', label: 'Yazı Alanı Placeholder', hint: 'Örn: "Bir şeyler sor..."', type: 'input' },
+      { path: 'chat.error', label: 'Hata Mesajı', type: 'input' },
+    ],
+  },
+  {
+    key: 'contact',
+    label: 'İletişim Bölümü',
+    description: 'Form, e-posta ve konum bilgileri',
+    icon: 'i-lucide-mail',
+    fields: [
+      { path: 'contact.label', label: 'Bölüm Etiketi', type: 'input' },
+      { path: 'contact.title', label: 'Bölüm Başlığı', type: 'input' },
+      { path: 'contact.subtitle', label: 'Bölüm Alt Başlığı', type: 'textarea' },
+      { path: 'contact.copyright', label: 'Telif Hakkı Yazısı', hint: 'Alt kısımdaki © yazısı', type: 'input' },
+      { path: 'contact.info.email', label: 'E-posta Adresi', type: 'input' },
+      { path: 'contact.info.location', label: 'Konum', hint: 'Örn: "İstanbul, Türkiye"', type: 'input' },
+      { path: 'contact.form.name', label: 'Form — İsim Etiketi', type: 'input' },
+      { path: 'contact.form.namePlaceholder', label: 'Form — İsim Placeholder', type: 'input' },
+      { path: 'contact.form.email', label: 'Form — E-posta Etiketi', type: 'input' },
+      { path: 'contact.form.emailPlaceholder', label: 'Form — E-posta Placeholder', type: 'input' },
+      { path: 'contact.form.message', label: 'Form — Mesaj Etiketi', type: 'input' },
+      { path: 'contact.form.messagePlaceholder', label: 'Form — Mesaj Placeholder', type: 'input' },
+      { path: 'contact.form.submit', label: 'Form — Gönder Butonu', type: 'input' },
+      { path: 'contact.form.success', label: 'Form — Başarı Mesajı', type: 'input' },
+      { path: 'contact.form.error', label: 'Form — Hata Mesajı', type: 'input' },
+    ],
+  },
+]

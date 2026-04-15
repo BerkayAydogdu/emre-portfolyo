@@ -8,43 +8,77 @@
         <p class="section-subtitle">{{ $t('projects.subtitle') }}</p>
       </div>
 
+      <!-- Tab Navigation -->
+      <div class="projects-tabs">
+        <button
+          class="projects-tab"
+          :class="{ active: activeTab === 'all' }"
+          @click="activeTab = 'all'"
+        >
+          {{ locale === 'tr' ? 'Tümü' : 'All' }}
+          <span class="tab-count">{{ projects.length }}</span>
+        </button>
+        <button
+          class="projects-tab"
+          :class="{ active: activeTab === 'arastirma' }"
+          @click="activeTab = 'arastirma'"
+        >
+          {{ locale === 'tr' ? 'Araştırmalar' : 'Research' }}
+          <span class="tab-count">{{ arastirmaProjects.length }}</span>
+        </button>
+        <button
+          class="projects-tab"
+          :class="{ active: activeTab === 'yazi' }"
+          @click="activeTab = 'yazi'"
+        >
+          {{ locale === 'tr' ? 'Yazılar' : 'Writings' }}
+          <span class="tab-count">{{ yaziProjects.length }}</span>
+        </button>
+      </div>
+
       <!-- Grid -->
       <div ref="gridEl" class="projects-grid">
-        <article
-          v-for="project in projects"
-          :key="project.id"
-          class="project-card"
-          @click="openModal(project)"
-        >
-          <!-- Image area -->
-          <div class="card-img-wrap">
-            <img
-              v-if="project.image"
-              :src="project.image"
-              :alt="$t(project.titleKey)"
-              class="card-img"
-              loading="lazy"
-            />
-            <div v-else class="card-img-placeholder">
-              <div class="placeholder-pattern" />
-              <UIcon name="i-lucide-file-text" class="placeholder-icon" />
+        <TransitionGroup name="card-fade">
+          <article
+            v-for="project in filteredProjects"
+            :key="project.id"
+            class="project-card"
+            @click="openModal(project)"
+          >
+            <!-- Image area -->
+            <div class="card-img-wrap">
+              <img
+                v-if="project.image"
+                :src="project.image"
+                :alt="$t(project.titleKey)"
+                class="card-img"
+                loading="lazy"
+              />
+              <div v-else class="card-img-placeholder">
+                <div class="placeholder-pattern" />
+                <UIcon name="i-lucide-file-text" class="placeholder-icon" />
+              </div>
+              <!-- Category badge over image -->
+              <span class="img-badge">{{ project.category }}</span>
+              <!-- Type badge -->
+              <span class="type-badge" :class="project.type">
+                {{ project.type === 'arastirma' ? (locale === 'tr' ? 'Araştırma' : 'Research') : (locale === 'tr' ? 'Yazı' : 'Writing') }}
+              </span>
             </div>
-            <!-- Category badge over image -->
-            <span class="img-badge">{{ project.category }}</span>
-          </div>
 
-          <!-- Content -->
-          <div class="card-content">
-            <h3 class="project-title">{{ $t(project.titleKey) }}</h3>
-            <p class="project-desc line-clamp-2">{{ $t(project.descriptionKey) }}</p>
-            <div class="card-tags">
-              <span v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</span>
+            <!-- Content -->
+            <div class="card-content">
+              <h3 class="project-title">{{ $t(project.titleKey) }}</h3>
+              <p class="project-desc line-clamp-2">{{ $t(project.descriptionKey) }}</p>
+              <div class="card-tags">
+                <span v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</span>
+              </div>
             </div>
-          </div>
 
-          <!-- Hover glow -->
-          <div class="card-glow" />
-        </article>
+            <!-- Hover glow -->
+            <div class="card-glow" />
+          </article>
+        </TransitionGroup>
       </div>
     </div>
 
@@ -111,11 +145,26 @@
 
 <script setup lang="ts">
 import { gsap } from 'gsap'
-import { usePortfolioData, type Project } from '~/composables/usePortfolioData'
+import type { Project } from '~/composables/usePortfolioData'
 
-const { projects } = usePortfolioData()
+const { projects } = usePortfolioDataRuntime()
+const { locale } = useI18n()
 const headerEl = ref<HTMLElement>()
 const gridEl = ref<HTMLElement>()
+
+// Tab state
+const activeTab = ref<'all' | 'arastirma' | 'yazi'>('all')
+
+const arastirmaProjects = computed(() =>
+  projects.value.filter((p: Project) => p.type === 'arastirma')
+)
+const yaziProjects = computed(() =>
+  projects.value.filter((p: Project) => p.type === 'yazi')
+)
+const filteredProjects = computed(() => {
+  if (activeTab.value === 'all') return projects.value
+  return projects.value.filter((p: Project) => p.type === activeTab.value)
+})
 
 // Modal State
 const selectedProject = ref<Project | null>(null)
@@ -161,7 +210,7 @@ onUnmounted(() => {
 <style scoped>
 .section-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .section-subtitle {
@@ -180,11 +229,109 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+/* ─── Tabs ─────────────────────────────────────────────────── */
+.projects-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.projects-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.projects-tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.projects-tab:hover {
+  color: var(--text-base);
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+.projects-tab:hover::before {
+  opacity: 1;
+}
+
+.projects-tab.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(6, 182, 212, 0.12));
+  color: var(--primary-glow);
+  border-color: rgba(167, 139, 250, 0.5);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+}
+
+.projects-tab.active::before {
+  opacity: 1;
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding: 0 0.375rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(124, 58, 237, 0.2);
+  color: var(--primary-glow);
+  transition: all 0.3s;
+}
+
+.projects-tab.active .tab-count {
+  background: rgba(167, 139, 250, 0.25);
+  color: #fff;
+}
+
+/* ─── Card transition ──────────────────────────────────────── */
+.card-fade-enter-active {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-fade-leave-active {
+  transition: all 0.3s ease;
+  position: absolute;
+}
+.card-fade-enter-from {
+  opacity: 0;
+  transform: scale(0.92) translateY(20px);
+}
+.card-fade-leave-to {
+  opacity: 0;
+  transform: scale(0.92) translateY(-10px);
+}
+.card-fade-move {
+  transition: transform 0.4s ease;
+}
+
 /* ─── Grid ─────────────────────────────────────────────────── */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  position: relative;
 }
 
 /* ─── Card ─────────────────────────────────────────────────── */
@@ -278,6 +425,33 @@ onUnmounted(() => {
   border: 1px solid rgba(167, 139, 250, 0.25);
   border-radius: 9999px;
   padding: 0.25rem 0.7rem;
+}
+
+/* Type badge */
+.type-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 0.2rem 0.6rem;
+  backdrop-filter: blur(6px);
+}
+
+.type-badge.arastirma {
+  background: rgba(6, 182, 212, 0.15);
+  color: #06b6d4;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.type-badge.yazi {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+  border: 1px solid rgba(168, 85, 247, 0.3);
 }
 
 /* ─── Content ──────────────────────────────────────────────── */
@@ -614,6 +788,13 @@ onUnmounted(() => {
   }
   .modal-title {
     font-size: 1.4rem;
+  }
+  .projects-tabs {
+    gap: 0.375rem;
+  }
+  .projects-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.78rem;
   }
 }
 </style>

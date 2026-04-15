@@ -31,9 +31,7 @@
 
 <script setup lang="ts">
 import { gsap } from 'gsap'
-import { usePortfolioData } from '~/composables/usePortfolioData'
-
-const { testimonials } = usePortfolioData()
+const { testimonials } = usePortfolioDataRuntime()
 const headerEl = ref<HTMLElement>()
 const cardsEl = ref<HTMLElement>()
 

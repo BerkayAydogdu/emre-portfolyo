@@ -1,10 +1,11 @@
 <template>
   <section id="about" class="section grid-bg">
     <div class="section-inner about-grid">
-      <!-- Left: Photo placeholder -->
+      <!-- Left: Photo -->
       <div ref="photoEl" class="about-photo-wrap">
         <div class="photo-frame">
-          <div class="photo-placeholder">
+          <img v-if="photo" :src="photo" alt="Emre" class="photo-img" />
+          <div v-else class="photo-placeholder">
             <UIcon name="i-lucide-user-round" class="photo-icon" />
           </div>
         </div>
@@ -60,9 +61,7 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { usePortfolioData } from '~/composables/usePortfolioData'
-
-const { expertise, interests, stats } = usePortfolioData()
+const { photo, expertise, interests, stats } = usePortfolioDataRuntime()
 
 const photoEl = ref<HTMLElement>()
 const contentEl = ref<HTMLElement>()
@@ -112,6 +111,13 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .photo-placeholder {
