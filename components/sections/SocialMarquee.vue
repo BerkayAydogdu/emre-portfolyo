@@ -1,5 +1,9 @@
 <template>
   <section class="social-showcase-section">
+    <div class="social-header">
+      <h2 class="social-title">{{ $t('contact.social') }}</h2>
+    </div>
+
     <div class="marquee-fade-left"></div>
     <div class="marquee-fade-right"></div>
     
@@ -99,10 +103,23 @@ const showcaseItems = computed(() => socials.value || [])
   margin-left: -50vw;
   margin-right: -50vw;
   overflow: hidden;
-  padding: 6rem 0;
+  padding: 2rem 0 4rem;
   background: var(--surface);
   border-top: 1px solid rgba(124, 58, 237, 0.1);
   border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+.social-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.social-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  font-size: 2.0rem;
+  color: var(--text-base);
 }
 
 .marquee-fade-left,
@@ -424,6 +441,28 @@ const showcaseItems = computed(() => socials.value || [])
   .showcase-card {
     width: 280px;
     height: 400px;
+    scroll-snap-align: center;
+  }
+
+  .marquee-track {
+    animation: none;
+    padding: 0 1rem;
+  }
+
+  .marquee-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .marquee-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .marquee-fade-left,
+  .marquee-fade-right {
+    width: 2rem;
   }
 }
 </style>

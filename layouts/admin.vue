@@ -21,7 +21,11 @@
       </nav>
 
       <div class="sidebar-footer">
-        <NuxtLink to="/" target="_blank" class="nav-item nav-item--muted">
+        <button @click="handleLogout" class="nav-item w-full text-left">
+          <UIcon name="i-lucide-log-out" class="nav-icon" />
+          <span>Çıkış Yap</span>
+        </button>
+        <NuxtLink to="/" target="_blank" class="nav-item nav-item--muted mt-2">
           <UIcon name="i-lucide-external-link" class="nav-icon" />
           <span>Siteyi Gör</span>
         </NuxtLink>
@@ -39,6 +43,12 @@
 const navItems = [
   { to: '/admin', label: 'Dashboard', icon: 'i-lucide-layout-dashboard' },
 ]
+
+async function handleLogout() {
+  await $fetch('/api/auth/logout', { method: 'POST' })
+  useCookie('admin_token').value = null
+  navigateTo('/admin/login')
+}
 
 // Force light mode while in admin so teleported modals/dropdowns also render light
 const colorMode = useColorMode()
