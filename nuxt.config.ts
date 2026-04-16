@@ -33,8 +33,8 @@ export default defineNuxtConfig({
     // @nuxtjs/i18n v9 resolves langDir relative to the <rootDir>/i18n/ folder
     langDir: 'locales',
     locales: [
-      { code: 'tr', name: 'Türkçe', file: 'tr.json' },
-      { code: 'en', name: 'English', file: 'en.json' },
+      { code: 'tr', name: 'Türkçe', file: 'tr.ts' },
+      { code: 'en', name: 'English', file: 'en.ts' },
     ],
     vueI18n: './i18n.config.ts',
     bundle: {
