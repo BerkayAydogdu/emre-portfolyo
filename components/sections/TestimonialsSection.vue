@@ -2,8 +2,8 @@
   <section id="references" class="section">
     <div class="section-inner">
       <div ref="headerEl" class="section-header">
-        <span class="section-label">{{ $t('testimonials.label') }}</span>
-        <h2 class="section-title">{{ $t('testimonials.title') }}</h2>
+        <span class="section-label">{{ kvt('testimonials.label') }}</span>
+        <h2 class="section-title">{{ kvt('testimonials.title') }}</h2>
       </div>
 
       <div ref="cardsEl" class="testimonials-grid">
@@ -13,14 +13,14 @@
           class="testimonial-card glass"
         >
           <UIcon name="i-lucide-quote" class="quote-icon" />
-          <p class="quote-text">{{ $t(item.quoteKey) }}</p>
+          <p class="quote-text">{{ kvt(item.quoteKey) }}</p>
           <div class="author">
             <div class="author-avatar">
               {{ item.name.charAt(0) }}
             </div>
             <div>
               <p class="author-name">{{ item.name }}</p>
-              <p class="author-meta">{{ $t(item.titleKey) }} · {{ item.organization }}</p>
+              <p class="author-meta">{{ kvt(item.titleKey) }} · {{ item.organization }}</p>
             </div>
           </div>
         </div>
@@ -32,6 +32,7 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
 const { testimonials } = usePortfolioDataRuntime()
+const { rt: kvt } = useRuntimeT()
 const headerEl = ref<HTMLElement>()
 const cardsEl = ref<HTMLElement>()
 

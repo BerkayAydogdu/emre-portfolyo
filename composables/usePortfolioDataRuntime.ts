@@ -28,6 +28,7 @@ interface PortfolioDataRaw {
   stats: Array<{ value: string; labelKey: string }>
   socials: SocialCard[]
   digitalMind?: DigitalMindConfig
+  _locales?: { tr?: Record<string, any>; en?: Record<string, any> }
 }
 
 /**
@@ -56,6 +57,7 @@ export function usePortfolioDataRuntime() {
   const stats = computed(() => data.value?.stats ?? static_.stats)
   const socials = computed(() => data.value?.socials ?? static_.socials)
   const digitalMind = computed(() => data.value?.digitalMind ?? static_.digitalMind)
+  const locales = computed(() => data.value?._locales ?? null)
 
-  return { photo, projects, testimonials, articles, expertise, interests, stats, socials, digitalMind, status }
+  return { photo, projects, testimonials, articles, expertise, interests, stats, socials, digitalMind, locales, status }
 }

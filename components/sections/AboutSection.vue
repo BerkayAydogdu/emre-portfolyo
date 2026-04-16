@@ -13,25 +13,25 @@
         <div class="stats-row">
           <div v-for="stat in stats" :key="stat.labelKey" class="stat-item">
             <span class="stat-value">{{ stat.value }}</span>
-            <span class="stat-label">{{ $t(stat.labelKey) }}</span>
+            <span class="stat-label">{{ kvt(stat.labelKey) }}</span>
           </div>
         </div>
       </div>
 
       <!-- Right: Content -->
       <div ref="contentEl" class="about-content">
-        <span class="section-label">{{ $t('about.label') }}</span>
-        <h2 class="section-title">{{ $t('about.title') }}</h2>
+        <span class="section-label">{{ kvt('about.label') }}</span>
+        <h2 class="section-title">{{ kvt('about.title') }}</h2>
 
         <div class="bio">
-          <p>{{ $t('about.bio1') }}</p>
-          <p>{{ $t('about.bio2') }}</p>
-          <p>{{ $t('about.bio3') }}</p>
+          <p>{{ kvt('about.bio1') }}</p>
+          <p>{{ kvt('about.bio2') }}</p>
+          <p>{{ kvt('about.bio3') }}</p>
         </div>
 
         <!-- Expertise -->
         <div class="expertise-block">
-          <h3 class="block-title">{{ $t('about.expertiseTitle') }}</h3>
+          <h3 class="block-title">{{ kvt('about.expertiseTitle') }}</h3>
           <div class="expertise-list">
             <div
               v-for="item in expertise"
@@ -39,17 +39,17 @@
               class="expertise-item"
             >
               <UIcon :name="item.icon" class="expertise-icon" />
-              <span>{{ $t(item.key) }}</span>
+              <span>{{ kvt(item.key) }}</span>
             </div>
           </div>
         </div>
 
         <!-- Interests -->
         <div class="interests-block">
-          <h3 class="block-title">{{ $t('about.interestsTitle') }}</h3>
+          <h3 class="block-title">{{ kvt('about.interestsTitle') }}</h3>
           <div class="tags-row">
             <span v-for="key in interests" :key="key" class="tag">
-              {{ $t(key) }}
+              {{ kvt(key) }}
             </span>
           </div>
         </div>
@@ -62,6 +62,7 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 const { photo, expertise, interests, stats } = usePortfolioDataRuntime()
+const { rt: kvt } = useRuntimeT()
 
 const photoEl = ref<HTMLElement>()
 const contentEl = ref<HTMLElement>()

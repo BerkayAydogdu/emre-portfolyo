@@ -3,9 +3,9 @@
     <div class="section-inner">
       <!-- Header -->
       <div ref="headerEl" class="contact-header">
-        <span class="section-label">{{ $t('contact.label') }}</span>
-        <h2 class="section-title contact-title">{{ $t('contact.title') }}</h2>
-        <p class="contact-subtitle">{{ $t('contact.subtitle') }}</p>
+        <span class="section-label">{{ kvt('contact.label') }}</span>
+        <h2 class="section-title contact-title">{{ kvt('contact.title') }}</h2>
+        <p class="contact-subtitle">{{ kvt('contact.subtitle') }}</p>
       </div>
 
       <div ref="bodyEl" class="contact-body">
@@ -14,43 +14,43 @@
           <Transition name="slide-up" mode="out-in">
             <div v-if="submitted" class="success-msg">
               <UIcon name="i-lucide-check-circle" class="success-icon" />
-              <p>{{ $t('contact.form.success') }}</p>
+              <p>{{ kvt('contact.form.success') }}</p>
             </div>
             <form v-else class="contact-form" @submit.prevent="submitForm">
               <div class="form-field">
-                <label>{{ $t('contact.form.name') }}</label>
+                <label>{{ kvt('contact.form.name') }}</label>
                 <input
                   v-model="form.name"
                   type="text"
                   class="form-input"
-                  :placeholder="$t('contact.form.namePlaceholder')"
+                  :placeholder="kvt('contact.form.namePlaceholder')"
                   required
                 />
               </div>
               <div class="form-field">
-                <label>{{ $t('contact.form.email') }}</label>
+                <label>{{ kvt('contact.form.email') }}</label>
                 <input
                   v-model="form.email"
                   type="email"
                   class="form-input"
-                  :placeholder="$t('contact.form.emailPlaceholder')"
+                  :placeholder="kvt('contact.form.emailPlaceholder')"
                   required
                 />
               </div>
               <div class="form-field">
-                <label>{{ $t('contact.form.message') }}</label>
+                <label>{{ kvt('contact.form.message') }}</label>
                 <textarea
                   v-model="form.message"
                   class="form-input"
                   rows="5"
-                  :placeholder="$t('contact.form.messagePlaceholder')"
+                  :placeholder="kvt('contact.form.messagePlaceholder')"
                   required
                 />
               </div>
               <button type="submit" class="submit-btn" :disabled="submitting">
                 <UIcon v-if="submitting" name="i-lucide-loader-circle" class="btn-icon spin" />
                 <UIcon v-else name="i-lucide-send" class="btn-icon" />
-                {{ submitting ? $t('contact.form.sending') : $t('contact.form.submit') }}
+                {{ submitting ? kvt('contact.form.sending') : kvt('contact.form.submit') }}
               </button>
             </form>
           </Transition>
@@ -66,8 +66,8 @@
               </div>
               <div>
                 <p class="info-label">Email</p>
-                <a :href="`mailto:${$t('contact.info.email')}`" class="info-value">
-                  {{ $t('contact.info.email') }}
+                <a :href="`mailto:${kvt('contact.info.email')}`" class="info-value">
+                  {{ kvt('contact.info.email') }}
                 </a>
               </div>
             </div>
@@ -76,15 +76,15 @@
                 <UIcon name="i-lucide-map-pin" class="info-icon" />
               </div>
               <div>
-                <p class="info-label">{{ $t('contact.location') }}</p>
-                <p class="info-value">{{ $t('contact.info.location') }}</p>
+                <p class="info-label">{{ kvt('contact.location') }}</p>
+                <p class="info-value">{{ kvt('contact.info.location') }}</p>
               </div>
             </div>
           </div>
 
           <!-- Social links -->
           <div class="social-block">
-            <p class="info-label" style="margin-bottom: 1rem;">{{ $t('contact.social') }}</p>
+            <p class="info-label" style="margin-bottom: 1rem;">{{ kvt('contact.social') }}</p>
             <div class="social-links">
               <a
                 v-for="social in socials"
@@ -105,7 +105,7 @@
       <!-- Footer line -->
       <div ref="footerEl" class="footer-line">
         <p class="footer-text">
-          © {{ new Date().getFullYear() }} Emre · {{ $t('contact.copyright') }}
+          © {{ new Date().getFullYear() }} Emre · {{ kvt('contact.copyright') }}
         </p>
       </div>
     </div>
@@ -114,6 +114,8 @@
 
 <script setup lang="ts">
 import { gsap } from 'gsap'
+
+const { rt: kvt } = useRuntimeT()
 
 const headerEl = ref<HTMLElement>()
 const bodyEl = ref<HTMLElement>()

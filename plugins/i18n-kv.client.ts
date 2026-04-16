@@ -1,22 +1,17 @@
+// Locale content is now served via useRuntimeT() composable which reads
+// from usePortfolioDataRuntime() → /api/portfolio-data → KV (_locales key).
+// This plugin is kept as a lightweight backup via setLocaleMessage.
 export default defineNuxtPlugin(async (nuxtApp) => {
   const i18n = nuxtApp.$i18n as any
   if (!i18n?.setLocaleMessage) return
-
-  async function loadLocale(locale: 'tr' | 'en') {
-    try {
-      const res = await fetch(`/api/_content/${locale}`)
-      if (!res.ok) return
-      const messages = await res.json()
-      if (messages && typeof messages === 'object' && Object.keys(messages).length > 0) {
-        i18n.setLocaleMessage(locale, messages)
-      }
-    }
-    catch {}
+  try {
+    const res = await fetch('/api/portfolio-data')
+    if (!res.ok) return
+    const data = await res.json()
+    const locales = data?._locales
+    if (!locales) return
+    if (locales.tr && Object.keys(locales.tr).length > 0) i18n.setLocaleMessage('tr', locales.tr)
+    if (locales.en && Object.keys(locales.en).length > 0) i18n.setLocaleMessage('en', locales.en)
   }
-
-  const current = (i18n.locale?.value ?? 'tr') as 'tr' | 'en'
-  const other = current === 'tr' ? 'en' : 'tr'
-
-  await loadLocale(current)
-  loadLocale(other)
+  catch {}
 })

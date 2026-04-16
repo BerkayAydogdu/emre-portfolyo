@@ -142,15 +142,17 @@ function flashSaved() {
 async function saveLocales(trPatch: Record<string, any>, enPatch: Record<string, any>) {
   globalError.value = ''
   try {
-    // Merge patch into current content
     const newTr = deepMerge(trContent.value, trPatch)
     const newEn = deepMerge(enContent.value, enPatch)
+    const newPortfolio = { ...portfolioData.value, _locales: { tr: newTr, en: newEn } }
     await Promise.all([
       $fetch('/api/admin/content/tr', { method: 'PUT', body: newTr }),
       $fetch('/api/admin/content/en', { method: 'PUT', body: newEn }),
+      $fetch('/api/admin/portfolio-data', { method: 'PUT', body: newPortfolio }),
     ])
     trContent.value = newTr
     enContent.value = newEn
+    portfolioData.value = newPortfolio
     flashSaved()
   }
   catch (e: any) {
@@ -175,14 +177,15 @@ async function saveAll(trPatch: Record<string, any>, enPatch: Record<string, any
   try {
     const newTr = deepMerge(trContent.value, trPatch)
     const newEn = deepMerge(enContent.value, enPatch)
+    const newPortfolio = { ...portfolioPatch, _locales: { tr: newTr, en: newEn } }
     await Promise.all([
       $fetch('/api/admin/content/tr', { method: 'PUT', body: newTr }),
       $fetch('/api/admin/content/en', { method: 'PUT', body: newEn }),
-      $fetch('/api/admin/portfolio-data', { method: 'PUT', body: portfolioPatch }),
+      $fetch('/api/admin/portfolio-data', { method: 'PUT', body: newPortfolio }),
     ])
     trContent.value = newTr
     enContent.value = newEn
-    portfolioData.value = portfolioPatch
+    portfolioData.value = newPortfolio
     flashSaved()
   }
   catch (e: any) {

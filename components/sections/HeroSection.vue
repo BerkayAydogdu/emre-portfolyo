@@ -8,12 +8,12 @@
 
     <!-- Content -->
     <div class="hero-content">
-      <p class="hero-eyebrow">{{ $t('hero.eyebrow') }}</p>
+      <p class="hero-eyebrow">{{ kvt('hero.eyebrow') }}</p>
       <h1 class="hero-name">
         <span class="hero-name-gradient">{{ displayedTitle }}</span><span v-if="titleTyping" class="hero-name-cursor" aria-hidden="true">|</span>
       </h1>
       <div class="hero-subtitle-wrap">
-        <span class="hero-subtitle">{{ $t('hero.subtitle') }}</span>
+        <span class="hero-subtitle">{{ kvt('hero.subtitle') }}</span>
       </div>
       <div class="hero-role-wrap">
         <Transition name="role-fade" mode="out-in">
@@ -25,7 +25,7 @@
         class="hero-cta"
         @click.prevent="scrollToAbout"
       >
-        {{ $t('hero.cta') }}
+        {{ kvt('hero.cta') }}
         <span class="cta-arrow">↓</span>
       </a>
     </div>
@@ -42,6 +42,7 @@ import { gsap } from 'gsap'
 import { useParticles } from '~/composables/useParticles'
 
 const { t, tm, rt, locale } = useI18n()
+const { rt: kvt, rtm: kvtm } = useRuntimeT()
 const canvasEl = ref<HTMLCanvasElement>()
 const displayedTitle = ref('')
 const titleTyping = ref(true)
@@ -56,7 +57,7 @@ let titleTypingTimer: ReturnType<typeof setTimeout>
 let titleReplayTimer: ReturnType<typeof setTimeout> | undefined
 let rolesRotationStarted = false
 
-const fullHeroTitle = computed(() => t('hero.name'))
+const fullHeroTitle = computed(() => kvt('hero.name'))
 
 function scheduleTitleReplay() {
   if (titleReplayTimer) clearTimeout(titleReplayTimer)
@@ -88,7 +89,7 @@ function typeTitle() {
 
 // ─── Rotating roles (fade, no typewriter) ─────────────────────────
 const roles = computed<string[]>(() => {
-  const messages = tm('hero.roles') as unknown
+  const messages = kvtm('hero.roles') as unknown
   if (Array.isArray(messages)) return messages.map((m) => rt(m as never))
   return []
 })
@@ -139,6 +140,15 @@ onUnmounted(() => {
   clearTimeout(titleTypingTimer)
   if (titleReplayTimer) clearTimeout(titleReplayTimer)
   if (roleRotateTimer) clearInterval(roleRotateTimer)
+})
+
+watch(fullHeroTitle, () => {
+  clearTimeout(titleTypingTimer)
+  if (titleReplayTimer) { clearTimeout(titleReplayTimer); titleReplayTimer = undefined }
+  titleCharIndex = 0
+  displayedTitle.value = ''
+  titleTyping.value = true
+  typeTitle()
 })
 
 watch(locale, () => {
