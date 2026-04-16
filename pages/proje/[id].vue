@@ -8,7 +8,8 @@
       <header class="project-header" :class="{ 'has-cover': project.image }">
         <div class="cover-bg" v-if="project.image">
           <img :src="project.image" alt="" />
-          <div class="cover-overlay"></div>
+          <div class="cover-scrim" aria-hidden="true" />
+          <div class="cover-overlay" aria-hidden="true" />
         </div>
         
         <div class="header-content">
@@ -34,43 +35,16 @@
       <article class="reader-body">
         
         <div v-if="project.body" class="generated-content" v-html="project.body"></div>
-        <!-- Mock Content for deeper project info -->
-        <div v-else class="mock-content">
-          <div class="info-grid">
-            <div class="info-card">
-              <UIcon name="i-lucide-target" class="info-icon" />
-              <h4 class="info-title">Amacım</h4>
-              <p class="info-desc">Teknoloji ve insan arasındaki yeni arayüzleri, dijital kültür temelinde haritalandırmak.</p>
-            </div>
-            <div class="info-card">
-              <UIcon name="i-lucide-compass" class="info-icon" />
-              <h4 class="info-title">Yaklaşım</h4>
-              <p class="info-desc">Etnografik saha çalışmaları, teknolojik trend analizi ve felsefi dekonstrüksiyon.</p>
-            </div>
-            <div class="info-card">
-              <UIcon name="i-lucide-flag" class="info-icon" />
-              <h4 class="info-title">Sonuç</h4>
-              <p class="info-desc">Üretken yaklaşımların tasarımsal süreçte nasıl anlam kazandığına dair bir manifesto.</p>
-            </div>
-          </div>
-
-          <h2>Saha Notları</h2>
-          <p>
-            Projenin ilk aşamasında sıklıkla karşılaştığımız sorun, eski dünya kodlarıyla 
-            (geleneksel yazılımların ve kurumların dayattığı yapılar) yeni medyanın 
-            (hızlı tüketim, yapay zeka jenerasyonları) arasındaki çatışmaydı.
-          </p>
-          <p>
-            Bunu çözmek adına, kullanıcı etkileşimini sadece metrik olarak değil, 
-            bir hikaye olarak ele almamız gerekti. 
-          </p>
+        <div v-else class="empty-body-state">
+          <UIcon name="i-lucide-file-plus" class="empty-icon" />
+          <p>Bu proje için henüz içerik eklenmemiş.</p>
         </div>
         
       </article>
       
       <div class="back-action">
-        <UButton to="/#digital-mind" icon="i-lucide-arrow-left" color="gray" variant="solid" size="lg">
-          Ana Ekrana Dön
+        <UButton to="/#digital-mind" icon="i-lucide-arrow-left" color="neutral" variant="solid" size="lg">
+            Ana Ekrana Dön
         </UButton>
       </div>
     </main>
@@ -145,10 +119,29 @@ const project = computed(() => {
   filter: saturate(1.2);
 }
 
+/* Darken photo so title/tags stay readable in light & dark site theme */
+.cover-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+}
+
 .cover-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, var(--bg) 0%, transparent 25%, transparent 60%, var(--bg) 100%);
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 52%,
+    var(--bg) 100%
+  );
 }
 
 .header-content {
@@ -157,6 +150,27 @@ const project = computed(() => {
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
+}
+
+/* Image heroes: always light copy + shadow (fixes dark text on dark rocks in light mode) */
+.project-header.has-cover .project-title,
+.project-header.has-cover .lead-description {
+  color: #f8fafc;
+  text-shadow:
+    0 2px 28px rgba(0, 0, 0, 0.9),
+    0 1px 3px rgba(0, 0, 0, 0.95);
+}
+
+.project-header.has-cover .category-badge {
+  background: rgba(124, 58, 237, 0.35);
+  border-color: rgba(196, 181, 253, 0.45);
+  color: #ede9fe;
+}
+
+.project-header.has-cover .tech-tag {
+  color: rgba(248, 250, 252, 0.95);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .meta-row {
@@ -254,15 +268,6 @@ const project = computed(() => {
   color: var(--text-muted);
 }
 
-.mock-content h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 2rem;
-  margin: 0 0 1.5rem;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.5rem;
-  color: var(--text-base);
-}
 /* Generated Content */
 .generated-content :deep(h1),
 .generated-content :deep(h2),
@@ -313,9 +318,16 @@ const project = computed(() => {
   margin: 2rem 0;
 }
 
-.mock-content p {
-  margin-bottom: 1.5rem;
+.empty-body-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
 }
+.empty-icon { font-size: 2.5rem; opacity: 0.4; }
 
 .back-action {
   max-width: 900px;

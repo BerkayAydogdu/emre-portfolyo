@@ -54,9 +54,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID,
     cloudflareApiToken: process.env.CLOUDFLARE_API_TOKEN,
-    adminPin: process.env.ADMIN_PIN,
-    adminTotpSecret: process.env.ADMIN_TOTP_SECRET,
-    adminJwtSecret: process.env.ADMIN_JWT_SECRET,
   },
 
   app: {

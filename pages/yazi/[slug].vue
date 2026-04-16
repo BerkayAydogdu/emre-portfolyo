@@ -7,7 +7,8 @@
       <header class="reader-header" :class="{ 'has-cover': article.image }">
         <div class="cover-bg" v-if="article.image">
           <img :src="article.image" alt="" />
-          <div class="cover-overlay"></div>
+          <div class="cover-scrim" aria-hidden="true" />
+          <div class="cover-overlay" aria-hidden="true" />
         </div>
         
         <div class="header-content">
@@ -35,31 +36,14 @@
         </p>
 
         <div v-if="article.body" class="generated-content" v-html="article.body"></div>
-        <div v-else class="mock-content">
-          <p>
-            Yapay zeka ve kültür arasındaki bu etkileşim, modern antropolojinin en çok tartışılan 
-            ancak hala en gri kalan bölgelerinden biridir. Bizim inşa ettiğimiz algoritmalar, sadece veriyi değil, 
-            aynı zamanda o veriyi üreten sosyolojik bağlamı da kopyalar ve yeniden üretir.
-          </p>
-          <h2>Yeni Dijital Sınırlar</h2>
-          <p>
-            Bu bağlamda incelediğimizde, veri bir yakıt olmaktan çıkıp bir ayna haline geliyor. 
-            Teknolojinin hızı, eski yapıları yok ederken yerine daha karmaşık, öngörülemez bir anlam 
-            haritası bırakıyor. İnsanların dijital ortamda bıraktığı her ayak izi, aslında bir 
-            ritüel, bir aidiyet çabasıdır.
-          </p>
-          <blockquote>
-            "Gerçeklik, kodların değil, insanların ona yüklediği anlamların üzerinde inşa edilir."
-          </blockquote>
-          <p>
-            Araştırmalarımız gösteriyor ki yeni teknolojiyi tasarlayanlar ile kullananlar arasındaki 
-            antropolojik köprü kurulmadığı sürece ürünler sadece teknik bir başarı olarak kalmaya mahkumdur.
-          </p>
+        <div v-else class="empty-body-state">
+          <UIcon name="i-lucide-file-plus" class="empty-icon" />
+          <p>Bu yazı için henüz içerik eklenmemiş.</p>
         </div>
       </article>
       
       <div class="back-action">
-        <UButton to="/#digital-mind" icon="i-lucide-arrow-left" color="gray" variant="solid" size="lg">
+        <UButton to="/#digital-mind" icon="i-lucide-arrow-left" color="neutral" variant="solid" size="lg">
           Ana Ekrana Dön
         </UButton>
       </div>
@@ -141,10 +125,28 @@ function formatDate(dateStr: string) {
   object-position: center;
 }
 
+.cover-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+}
+
 .cover-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, var(--bg) 0%, transparent 25%, transparent 60%, var(--bg) 100%);
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 52%,
+    var(--bg) 100%
+  );
 }
 
 .header-content {
@@ -153,6 +155,36 @@ function formatDate(dateStr: string) {
   max-width: 800px;
   margin: 0 auto;
   width: 100%;
+}
+
+.reader-header.has-cover .article-title {
+  color: #f8fafc;
+  text-shadow:
+    0 2px 28px rgba(0, 0, 0, 0.9),
+    0 1px 3px rgba(0, 0, 0, 0.95);
+}
+
+.reader-header.has-cover .category-tag {
+  color: #e9d5ff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+.reader-header.has-cover .read-time {
+  color: rgba(248, 250, 252, 0.88);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.75);
+}
+
+.reader-header.has-cover .author-name {
+  color: #f8fafc;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.85);
+}
+
+.reader-header.has-cover .article-date {
+  color: rgba(226, 232, 240, 0.9);
+}
+
+.reader-header.has-cover :deep(img) {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
 }
 
 .meta-tags {
@@ -279,6 +311,17 @@ function formatDate(dateStr: string) {
   border-radius: 12px;
   margin: 2rem 0;
 }
+
+.empty-body-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.empty-icon { font-size: 2.5rem; opacity: 0.4; }
 
 .back-action {
   max-width: 740px;

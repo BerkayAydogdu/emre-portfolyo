@@ -55,6 +55,10 @@
       "title": "Etz Hayim ve Evrenin Yaratılışı Üzerine",
       "description": "Mistik geleneklerde evrenin yaratılış mitolojisinin modern bilimle kesişimi. Kabala'dan günümüze kozmolojik bir yolculuk."
     },
+    "etz-hayim": {
+      "title": "Etz Hayim ve Evrenin Yaratılışı Üzerine",
+      "description": "Mistik geleneklerde evrenin yaratılış mitolojisinin modern bilimle kesişimi. Kabala'dan günümüze kozmolojik bir yolculuk."
+    },
     "akis": {
       "title": "'Akış': Bir Sosyal Medya Teriminin Anatomisi",
       "description": "Dijital çağda 'akış' kavramının sosyolojik ve psikolojik analizi. Sosyal medyanın dil üzerindeki dönüştürücü etkisi."
@@ -124,7 +128,20 @@
     "title": "Portfolyo AI",
     "online": "Çevrimiçi",
     "welcome": "Merhaba! Ben Emre'nin portfolyo sitesindeki AI yardımcısıyım. Projeler, araştırmalar veya çalışmalar hakkında soru sorabilirsin.",
-    "placeholder": "Bir şeyler sor...",
+    "welcomeDigitalMind": "Beni dene — The Digital Mind’de seçtiğin klasör veya kartlardaki içerikler hakkında sorularını sor. Özet, konu veya “bu ne anlatıyor?” diye sorabilirsin.",
+    "welcomeDigitalMindHi": "Merhaba! Kütüphane, klasör veya kartlar hakkında sor; aşağıdaki hazır sorulardan birine de dokunabilirsin.",
+    "welcomeReader": "Beni dene — bu yazının veya projenin konusunu, özetini veya merak ettiklerini sorabilirsin.",
+    "welcomeReaderHi": "Merhaba! Bu sayfadaki yazı veya proje hakkında sor — özet, ana fikirler veya merak ettiklerin. Hazır sorulara tıklayabilir veya kendi cümlelerinle yazabilirsin.",
+    "disabledHint": "Sohbet yalnızca ana sayfada The Digital Mind’deyken veya oradan açılan yazı / proje sayfasındayken görünür.",
+    "inputLeadDigitalMind": "Kendi cümlelerinle sor veya bir öneriye dokun:",
+    "inputLeadReader": "Bu içerik hakkında sor, ya da şunlardan birini dene:",
+    "suggest1": "Bu klasörde neler var, kısaca?",
+    "suggest2": "Bu bölüm ne anlatıyor?",
+    "suggest3": "Sırada ne okumalı / incelemeliyim?",
+    "readerSuggest1": "Bunu sade dilde özetle",
+    "readerSuggest2": "Akılda tutmam gereken ana fikirler neler?",
+    "readerSuggest3": "Sayfadaki önemli bir kavramı açıkla",
+    "placeholder": "Sorunu yaz…",
     "error": "Üzgünüm, bir hata oluştu. Lütfen tekrar dene."
   },
   "contact": {

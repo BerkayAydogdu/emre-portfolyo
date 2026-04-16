@@ -1,36 +1,34 @@
 <template>
-  <div class="admin-shell">
+  <div class="admin-root">
     <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="sidebar-brand">
-        <div class="brand-icon">⚡</div>
-        <div>
-          <div class="brand-name">Admin Panel</div>
-          <div class="brand-sub">emreportfoy.com</div>
-        </div>
+        <span class="brand-icon">⚙</span>
+        <span class="brand-text">Admin Panel</span>
       </div>
 
-      <div class="sidebar-section-label">Editör</div>
       <nav class="sidebar-nav">
-        <NuxtLink to="/admin" class="nav-item" :class="{ active: route.path === '/admin' }">
-          <UIcon name="i-lucide-layout-dashboard" class="nav-icon" />
-          <span>Tüm İçerikler</span>
+        <NuxtLink
+          v-for="item in navItems"
+          :key="item.to"
+          :to="item.to"
+          class="nav-item"
+          active-class="nav-item--active"
+        >
+          <UIcon :name="item.icon" class="nav-icon" />
+          <span>{{ item.label }}</span>
         </NuxtLink>
-        <a href="/" target="_blank" class="nav-item nav-external">
-          <UIcon name="i-lucide-external-link" class="nav-icon" />
-          <span>Siteyi Görüntüle</span>
-        </a>
       </nav>
 
       <div class="sidebar-footer">
-        <button class="logout-btn" @click="logout">
-          <UIcon name="i-lucide-log-out" />
-          Çıkış Yap
-        </button>
+        <NuxtLink to="/" target="_blank" class="nav-item nav-item--muted">
+          <UIcon name="i-lucide-external-link" class="nav-icon" />
+          <span>Siteyi Gör</span>
+        </NuxtLink>
       </div>
     </aside>
 
-    <!-- Content -->
+    <!-- Main -->
     <main class="admin-main">
       <slot />
     </main>
@@ -38,27 +36,49 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'AdminLayout' })
-const route = useRoute()
+const navItems = [
+  { to: '/admin', label: 'Dashboard', icon: 'i-lucide-layout-dashboard' },
+]
 
-async function logout() {
-  await $fetch('/api/admin/auth/logout', { method: 'POST' })
-  navigateTo('/admin/login')
-}
+// Force light mode while in admin so teleported modals/dropdowns also render light
+const colorMode = useColorMode()
+const previousPreference = ref<string>('dark')
+
+onMounted(() => {
+  previousPreference.value = colorMode.preference
+  colorMode.preference = 'light'
+})
+
+onUnmounted(() => {
+  colorMode.preference = previousPreference.value
+})
 </script>
 
+<style>
+/* Force light mode for the entire admin — override global dark CSS vars */
+.admin-root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text-base: #0f172a;
+  --text-muted: #64748b;
+  --border-subtle: #e2e8f0;
+  --primary: #7c3aed;
+  --primary-glow: #7c3aed;
+}
+</style>
+
 <style scoped>
-.admin-shell {
+.admin-root {
   display: flex;
   min-height: 100vh;
   background: #f1f5f9;
-  color: #0f172a;
   font-family: 'Inter', sans-serif;
+  color: #0f172a;
 }
 
-/* ── Sidebar ─────────────────────────────────────────────────────── */
+/* ── Sidebar ── */
 .admin-sidebar {
-  width: 230px;
+  width: 220px;
   flex-shrink: 0;
   background: #ffffff;
   border-right: 1px solid #e2e8f0;
@@ -67,128 +87,75 @@ async function logout() {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow-y: auto;
 }
 
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 20px 16px;
+  gap: 0.625rem;
+  padding: 1.25rem 1.25rem 1rem;
   border-bottom: 1px solid #e2e8f0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #7c3aed;
 }
 
 .brand-icon {
-  font-size: 20px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ede9fe;
-  border-radius: 8px;
-}
-
-.brand-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.brand-sub {
-  font-size: 11px;
-  color: #94a3b8;
-  margin-top: 1px;
-}
-
-.sidebar-section-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #94a3b8;
-  padding: 16px 16px 6px;
+  font-size: 1.25rem;
 }
 
 .sidebar-nav {
-  padding: 0 8px;
+  flex: 1;
+  padding: 0.75rem 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-bottom: 8px;
+  gap: 0.25rem;
+}
+
+.sidebar-footer {
+  padding: 0.75rem;
+  border-top: 1px solid #e2e8f0;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 10px;
-  border-radius: 8px;
-  font-size: 13.5px;
-  color: #64748b;
+  gap: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
   text-decoration: none;
-  cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
 
 .nav-item:hover {
   background: #f1f5f9;
-  color: #0f172a;
+  color: #1e293b;
 }
 
-.nav-item.active {
+.nav-item--active {
   background: #ede9fe;
-  color: #6d28d9;
-  font-weight: 600;
+  color: #7c3aed;
 }
 
-.nav-flag {
-  font-size: 15px;
-  line-height: 1;
+.nav-item--muted {
+  color: #94a3b8;
+  font-size: 0.8rem;
 }
 
 .nav-icon {
-  font-size: 15px;
+  font-size: 1rem;
   flex-shrink: 0;
 }
 
-.nav-external {
-  opacity: 0.7;
-}
-
-.sidebar-footer {
-  margin-top: auto;
-  padding: 12px 8px 16px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.logout-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 9px 10px;
-  border-radius: 8px;
-  font-size: 13.5px;
-  color: #64748b;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.logout-btn:hover {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-/* ── Main ────────────────────────────────────────────────────────── */
+/* ── Main ── */
 .admin-main {
   flex: 1;
   overflow-y: auto;
-  padding: 36px 40px;
+  padding: 2rem;
   min-width: 0;
 }
 </style>
-
-

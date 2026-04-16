@@ -5,8 +5,8 @@
         <!-- APP HEADER -->
         <div class="app-header">
           <div class="app-title-area">
-            <h2 class="app-brand">The Digital Mind</h2>
-            <p class="app-subtitle">Burada araştırma, proje ve teknik yolculuğumu paylaşıyorum — kalıcı, kişisel ve her an çalışan kütüphanem.</p>
+            <h2 class="app-brand">{{ appTitle }}</h2>
+            <p class="app-subtitle">{{ appSubtitle }}</p>
           </div>
           <div class="app-window-controls">
             <span class="control-btn min"></span>
@@ -32,7 +32,7 @@
               :key="tab.id"
               class="os-tab-btn"
               :class="{ active: activeOsTab === tab.id }"
-              @click="activeOsTab = tab.id"
+              @click="onSelectTab(tab.id)"
               :title="tab.label"
             >
               <UIcon :name="tab.icon" class="tab-icon" />
@@ -127,25 +127,67 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 const router = useRouter()
-const { projects, articles } = usePortfolioDataRuntime()
+const route = useRoute()
+const { projects, articles, digitalMind } = usePortfolioDataRuntime()
 
 const isSidebarCollapsed = ref(false)
 
-// ── TABS ──────────────────────────────────────────────────────────────────────
-const osTabs = [
-  { id: 'arastirmalar', label: 'ARAŞTIRMALAR.exe', icon: 'i-lucide-folder-git-2',  source: 'projects',  filterType: 'arastirma' },
-  { id: 'projeler',     label: 'PROJELER.app',     icon: 'i-lucide-monitor-play',   source: 'projects',  filterType: 'yazi'      },
-  { id: 'dusunceler',   label: 'DÜŞÜNCELER.txt',   icon: 'i-lucide-file-text',      source: 'articles',  filterType: 'dusunce'   },
-  { id: 'analizler',    label: 'ANALİZLER.db',     icon: 'i-lucide-database',       source: 'articles',  filterType: 'analiz'    },
-]
+// ── TABS — driven by portfolio data ──────────────────────────────────────────
+const osTabs = computed(() => digitalMind.value?.tabs ?? [
+  { id: 'arastirmalar', label: 'ARAŞTIRMALAR.exe', icon: 'i-lucide-folder-git-2',  source: 'projects' as const,  filterType: 'arastirma' },
+  { id: 'projeler',     label: 'PROJELER.app',     icon: 'i-lucide-monitor-play',   source: 'projects' as const,  filterType: 'yazi'      },
+  { id: 'dusunceler',   label: 'DÜŞÜNCELER.txt',   icon: 'i-lucide-file-text',      source: 'articles' as const,  filterType: 'dusunce'   },
+  { id: 'analizler',    label: 'ANALİZLER.db',     icon: 'i-lucide-database',       source: 'articles' as const,  filterType: 'analiz'    },
+])
+
+const appTitle = computed(() => digitalMind.value?.title ?? 'The Digital Mind')
+const appSubtitle = computed(() => digitalMind.value?.subtitle ?? 'Burada araştırma, proje ve teknik yolculuğumu paylaşıyorum — kalıcı, kişisel ve her an çalışan kütüphanem.')
 
 const activeOsTab = ref<string | null>(null)
-const activeTabConfig = computed(() => osTabs.find(t => t.id === activeOsTab.value))
+const activeTabConfig = computed(() => osTabs.value.find(t => t.id === activeOsTab.value))
+
+const dmChatCtx = useDigitalMindUiContext()
+
+/** Keeps #digital-mind in the URL when a folder tab is chosen so chat + context stay aligned */
+function onSelectTab(id: string) {
+  activeOsTab.value = id
+  if (route.path !== '/' && route.path !== '') return
+  if (route.hash === '#digital-mind') return
+  router.replace({ path: route.path, query: route.query, hash: '#digital-mind' })
+}
+
+watch(
+  osTabs,
+  (tabs) => {
+    if (tabs.length && activeOsTab.value == null) {
+      activeOsTab.value = tabs[0].id
+    }
+  },
+  { immediate: true },
+)
+
+watch(
+  [activeOsTab, osTabs],
+  () => {
+    const tab = osTabs.value.find(t => t.id === activeOsTab.value)
+    if (tab) {
+      dmChatCtx.value = {
+        label: tab.label,
+        filterType: tab.filterType,
+        source: tab.source,
+      }
+    }
+    else {
+      dmChatCtx.value = { label: '', filterType: '', source: '' }
+    }
+  },
+  { immediate: true },
+)
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 const currentItems = computed(() => {
@@ -226,8 +268,7 @@ onUnmounted(() => {
   box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  height: 700px;
+  min-height: 600px;
 }
 
 /* HEADER */
@@ -276,7 +317,6 @@ onUnmounted(() => {
 .app-body {
   display: flex;
   flex: 1;
-  overflow: hidden;
 }
 
 /* SIDEBAR */
@@ -290,6 +330,7 @@ onUnmounted(() => {
   gap: 0.5rem;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .app-sidebar.is-collapsed {
   width: 80px;
   padding: 1.5rem 0.5rem;
@@ -382,13 +423,7 @@ onUnmounted(() => {
 .app-content-area {
   flex: 1;
   padding: 2.5rem;
-  overflow-y: auto;
   position: relative;
-}
-.app-content-area::-webkit-scrollbar { width: 6px; }
-.app-content-area::-webkit-scrollbar-thumb {
-  background: rgba(167, 139, 250, 0.2);
-  border-radius: 4px;
 }
 
 .content-grid {
@@ -491,7 +526,7 @@ onUnmounted(() => {
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .app-container { height: auto; min-height: 600px; }
+  .app-container { min-height: 500px; }
   .app-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
   .app-window-controls { position: absolute; top: 1.5rem; right: 1.5rem; }
   .app-body { flex-direction: column; }
@@ -541,8 +576,11 @@ onUnmounted(() => {
   border-radius: 16px;
   width: 100%;
   max-width: 560px;
-  overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.4);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124,58,237,0.3) transparent;
 }
 
 /* Header */

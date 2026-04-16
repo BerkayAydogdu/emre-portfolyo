@@ -61,10 +61,13 @@
                 <UIcon :name="item.icon" class="badge-icon" />
               </div>
               <div class="card-content-lin">
-                <div class="avatar-ph"><UIcon name="i-lucide-user" /></div>
+                <div class="avatar-ph">
+                  <img v-if="item.image" :src="item.image" class="avatar-img" alt="" />
+                  <UIcon v-else name="i-lucide-user" />
+                </div>
                 <div class="lin-name">{{ item.handle }}</div>
                 <div class="lin-title">{{ item.title }}</div>
-                <div class="action-btn mt-4 w-full text-center bg-blue-600 border-none">Bağlantı Kur</div>
+                <div class="action-btn mt-4 w-full text-center">Bağlantı Kur</div>
               </div>
             </div>
 
@@ -275,10 +278,49 @@ const showcaseItems = computed(() => socials.value || [])
   color: black;
 }
 
-/* X Bg */
+/* ── X (Twitter) card ─────────────────────────────────── */
 .x-bg {
-  background: var(--bg);
+  background: #0a0a0a;
   padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+/* subtle radial glow behind tweet text */
+.x-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255,255,255,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 60% at 80% 80%, rgba(29,155,240,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+/* horizontal scan-line texture */
+.x-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 3px, rgba(255,255,255,0.015) 3px, rgba(255,255,255,0.015) 4px
+  );
+  pointer-events: none;
+}
+.x-bg .platform-badge {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+  color: #fff;
+}
+.x-bg .platform-badge .badge-icon { color: #fff; }
+.x-bg .card-content-bottom { color: #fff; }
+.x-bg .action-btn {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.2);
+  color: #fff;
+}
+.x-bg:hover .action-btn,
+.showcase-card:hover .x-bg .action-btn {
+  background: #fff;
+  color: #000;
 }
 .card-content-center {
   position: relative;
@@ -291,19 +333,26 @@ const showcaseItems = computed(() => socials.value || [])
 .tweet-text {
   font-size: 1.2rem;
   line-height: 1.6;
-  color: var(--text-base);
+  color: #e7e9ea;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
-/* LinkedIn */
+/* ── LinkedIn card ─────────────────────────────────────── */
 .linkedin-bg {
-  background: var(--surface);
+  background: #f3f2ef;
 }
 .lin-header-img {
   height: 120px;
-  background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+  background: linear-gradient(135deg, #0a66c2 0%, #0077b5 50%, #004182 100%);
   position: relative;
   z-index: 1;
 }
+.linkedin-bg .platform-badge {
+  background: rgba(0,0,0,0.45);
+  border-color: rgba(255,255,255,0.2);
+  color: #fff;
+}
+.linkedin-bg .platform-badge .badge-icon { color: #fff; }
 .card-content-lin {
   position: relative;
   z-index: 2;
@@ -316,26 +365,47 @@ const showcaseItems = computed(() => socials.value || [])
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background: var(--bg);
-  border: 4px solid var(--surface);
+  background: #e1e9ee;
+  border: 4px solid #f3f2ef;
   margin-top: -45px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.5rem;
-  color: var(--text-muted);
+  color: #9aabb7;
   margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .lin-name {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   font-size: 1.35rem;
   margin-bottom: 0.5rem;
+  color: #000;
 }
 .lin-title {
   font-size: 0.95rem;
-  color: var(--text-muted);
+  color: #666;
   line-height: 1.5;
+}
+.linkedin-bg .action-btn {
+  background: transparent;
+  border: 2px solid #0a66c2;
+  color: #0a66c2;
+  font-weight: 700;
+  border-radius: 999px;
+}
+.showcase-card:hover .linkedin-bg .action-btn {
+  background: #0a66c2;
+  color: #fff;
 }
 
 /* Force white text on image overlays */

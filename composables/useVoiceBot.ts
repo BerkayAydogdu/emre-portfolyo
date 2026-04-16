@@ -14,6 +14,7 @@ export function useVoiceBot() {
   const audioEngine = ref<HTMLAudioElement | null>(null)
 
   const { chat } = useCloudflareAI()
+  const chatPageContext = useChatPageContext()
 
   // Check support only on client side
   if (import.meta.client) {
@@ -138,9 +139,10 @@ export function useVoiceBot() {
     error.value = ''
 
     try {
-      const response = await chat([
-        { role: 'user', content: query },
-      ])
+      const response = await chat(
+        [{ role: 'user', content: query }],
+        { pageContext: chatPageContext.value },
+      )
       aiResponse.value = response
       speak(response, lang)
     } catch (err: any) {

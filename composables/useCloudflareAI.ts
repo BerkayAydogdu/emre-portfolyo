@@ -1,6 +1,13 @@
+import type { ChatPageContextPayload } from '~/types/chatContext'
+
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'system'
   content: string
+}
+
+export interface ChatRequestOptions {
+  /** Current page / section so the model can answer “what is this about?” */
+  pageContext?: ChatPageContextPayload | null
 }
 
 export function useCloudflareAI() {
@@ -11,11 +18,16 @@ export function useCloudflareAI() {
   async function streamChat(
     messages: ChatMessage[],
     onChunk: (token: string) => void,
+    options?: ChatRequestOptions,
   ): Promise<string> {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages, stream: true }),
+      body: JSON.stringify({
+        messages,
+        stream: true,
+        pageContext: options?.pageContext ?? null,
+      }),
     })
 
     if (!response.ok) {
@@ -77,11 +89,15 @@ export function useCloudflareAI() {
   /**
    * Non-streaming: wait for the complete response (used by voice bot).
    */
-  async function chat(messages: ChatMessage[]): Promise<string> {
+  async function chat(messages: ChatMessage[], options?: ChatRequestOptions): Promise<string> {
     try {
       const res = await $fetch<string>('/api/chat', {
         method: 'POST',
-        body: { messages, stream: false },
+        body: {
+          messages,
+          stream: false,
+          pageContext: options?.pageContext ?? null,
+        },
       })
       // $fetch may return a string directly or a wrapped value
       if (typeof res === 'string') return res

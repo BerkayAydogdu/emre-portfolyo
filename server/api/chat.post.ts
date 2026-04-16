@@ -1,5 +1,13 @@
+import { buildPageContextBlock } from '~/server/utils/chatContext'
+import type { ChatPageContextPayload } from '~/types/chatContext'
+
 export default defineEventHandler(async (event) => {
-  const { messages, stream = true } = await readBody(event)
+  const body = await readBody(event) as {
+    messages: unknown
+    stream?: boolean
+    pageContext?: ChatPageContextPayload | null
+  }
+  const { messages, stream = true, pageContext } = body
 
   const config = useRuntimeConfig()
   const ACCOUNT_ID = config.cloudflareAccountId
@@ -13,11 +21,13 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const contextBlock = buildPageContextBlock(pageContext ?? null)
+
   const systemPrompt = `Adım "Portfolyo AI". Emre'nin portfolyo web sitesinde ziyaretçilere yardımcı olan bir AI'yım.
 Görevim ziyaretçilerin Emre'nin çalışmaları hakkındaki sorularını kısa ve samimi şekilde yanıtlamak.
 
 Emre Hakkında:
-Emre bir dijital antropolog, araştırmacı ve yazardır. Teknoloji, kültür ve insan ilişkilerinin kesişim noktasında çalışır. İstanbul'da yaşar. 10+ yıl deneyimi var, 100'den fazla makale yazmıştır.
+Emre bir dijital antropolog, araştırmacı ve yazardır. Teknoloji, kültür ve insan ilişkilerinin kesişim noktasında çalışır. Konya'da yaşar. 10+ yıl deneyimi var, 100'den fazla makale yazmıştır.
 
 Uzmanlık Alanları: Dijital Antropoloji, AI ve Teknoloji Felsefesi, Kültürel Analiz, İçerik Üretimi, Araştırma ve Yazarlık
 
@@ -37,14 +47,17 @@ Makaleleri:
 İletişim: iletisim@emre.com, İstanbul/Türkiye, GitHub/LinkedIn/Twitter
 
 Kurallarım:
+- Bağlamda “PORTFÖY — TÜM YAZILAR” veya “TAM METİN (düz)” satırları varsa bunlar gerçek makale metnidir; “metni okuyamadım / erişemedim” deme, bu metne dayanarak özetle ve yanıtla.
+- Ana sayfada The Digital Mind klasör görünümünde yalnızca kart özeti görünse bile yukarıdaki kural geçerlidir.
 - Kendimi tanıtırken "Ben Emre'nin portfolyo sitesindeki AI yardımcısıyım" derim.
 - Asla "Sen" diye başlayan cümlelerle kendimi anlatmam.
 - Sadece Emre'nin çalışmaları, projeleri, makaleleri ve iletişim bilgileri hakkında konuşurum.
 - Farklı konulara kibarca yönlendirme yaparım.
 - Türkçe soruya Türkçe, İngilizce soruya İngilizce cevap veririm.
-- Yanıtlarım en fazla 2-3 cümle olur. Kısa ve öz yazarım.
+- Genel sorularda yanıtlarım kısa tutarım (yaklaşık 2-4 cümle). Sayfa içeriğinin tamamını özetlemesi istendiğinde ise metnin başından kopyalama; bütün metni göz önünde bulundurup 4-7 cümlelik bir özet verebilirsin.
+- Bir yazının veya projenin içeriğini anlatırken asla sadece giriş paragrafını tekrarlama; bu hatalı. Ana fikir, gelişim ve sonuç bir arada özetlensin.
 - Asla markdown (**, ##, * gibi) kullanmam. Düz metin yazarım.
-- Asla liste veya madde işareti kullanmam, akıcı cümleler kurarım.`
+- Asla liste veya madde işareti kullanmam, akıcı cümleler kurarım.${contextBlock}`
 
   const url = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/ai/run/${MODEL}`
 
@@ -53,14 +66,15 @@ Kurallarım:
     'Content-Type': 'application/json',
   }
 
-  const body = JSON.stringify({
-    messages: [{ role: 'system', content: systemPrompt }, ...messages],
+  const msgList = Array.isArray(messages) ? messages : []
+  const requestBody = JSON.stringify({
+    messages: [{ role: 'system', content: systemPrompt }, ...msgList],
     stream,
-    max_tokens: 512,
+    max_tokens: 768,
     temperature: 0.7,
   })
 
-  const response = await fetch(url, { method: 'POST', headers, body })
+  const response = await fetch(url, { method: 'POST', headers, body: requestBody })
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => 'Unknown error')

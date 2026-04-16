@@ -13,6 +13,13 @@
     "@nuxt/ui": "^3.0.2",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/i18n": "^9.3.0",
+    "@tiptap/extension-image": "^3.22.3",
+    "@tiptap/extension-link": "^3.22.3",
+    "@tiptap/extension-placeholder": "^3.22.3",
+    "@tiptap/extension-text-align": "^3.22.3",
+    "@tiptap/extension-underline": "^3.22.3",
+    "@tiptap/starter-kit": "^3.22.3",
+    "@tiptap/vue-3": "^3.22.3",
     "@vercel/blob": "^2.3.3",
     "@vercel/kv": "^3.0.0",
     "@vueuse/motion": "^2.2.6",
@@ -24,6 +31,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.102",
     "@types/node": "^22.0.0",
     "@types/qrcode": "^1.5.6",
     "qrcode": "^1.5.4",

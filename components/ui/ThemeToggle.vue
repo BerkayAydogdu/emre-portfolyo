@@ -1,14 +1,21 @@
 <template>
-  <button
-    class="theme-toggle"
-    :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
-    @click="toggle"
-  >
-    <Transition name="icon-swap" mode="out-in">
-      <UIcon v-if="isDark" key="sun" name="i-lucide-sun" />
-      <UIcon v-else key="moon" name="i-lucide-moon" />
-    </Transition>
-  </button>
+  <!-- Client-only: color mode differs SSR vs client → avoids hydration class mismatch on icons -->
+  <ClientOnly>
+    <button
+      type="button"
+      class="theme-toggle"
+      :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+      @click="toggle"
+    >
+      <Transition name="icon-swap" mode="out-in">
+        <UIcon v-if="isDark" key="sun" name="i-lucide-sun" />
+        <UIcon v-else key="moon" name="i-lucide-moon" />
+      </Transition>
+    </button>
+    <template #fallback>
+      <span class="theme-toggle theme-toggle--placeholder" aria-hidden="true" />
+    </template>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -40,6 +47,11 @@ function toggle() {
   background: rgba(124, 58, 237, 0.1);
   border-color: rgba(124, 58, 237, 0.4);
   color: var(--text-base);
+}
+
+.theme-toggle--placeholder {
+  pointer-events: none;
+  opacity: 0.35;
 }
 
 /* Icon swap animation */

@@ -55,6 +55,10 @@
       "title": "On Etz Hayim and the Creation of the Universe",
       "description": "The intersection of creation mythology in mystical traditions with modern science. A cosmological journey from Kabbalah to the present day."
     },
+    "etz-hayim": {
+      "title": "On Etz Hayim and the Creation of the Universe",
+      "description": "The intersection of creation mythology in mystical traditions with modern science. A cosmological journey from Kabbalah to the present day."
+    },
     "akis": {
       "title": "'Flow': The Anatomy of a Social Media Term",
       "description": "A sociological and psychological analysis of the concept of 'flow' in the digital age. The transformative effect of social media on language."
@@ -124,7 +128,20 @@
     "title": "Portfolio AI",
     "online": "Online",
     "welcome": "Hi! I'm the AI helper on Emre's portfolio site. You can ask me about his projects, research, or work.",
-    "placeholder": "Ask something...",
+    "welcomeDigitalMind": "Try me — ask about the folder or cards you’re viewing here. You can ask for a summary, the topic, or what a piece is about.",
+    "welcomeDigitalMindHi": "Hi! Ask me about this library — folders, cards, or anything you see here. You can also use the quick prompts below.",
+    "welcomeReader": "Try me — ask about this article or project: the topic, a summary, or anything you’re curious about.",
+    "welcomeReaderHi": "Hi! Ask me about this page — summary, main ideas, or anything you’re curious about. Try the prompts below or type your own question.",
+    "disabledHint": "Chat opens on The Digital Mind (home) or when you open an article or project from it.",
+    "inputLeadDigitalMind": "Ask in your own words, or tap a suggestion:",
+    "inputLeadReader": "Ask about this piece, or try one of these:",
+    "suggest1": "What’s in this folder, in a nutshell?",
+    "suggest2": "What is this section about?",
+    "suggest3": "What should I open or read next?",
+    "readerSuggest1": "Summarize this in plain language",
+    "readerSuggest2": "What are the main ideas I should remember?",
+    "readerSuggest3": "Explain one key term from this page",
+    "placeholder": "Type a question…",
     "error": "Sorry, an error occurred. Please try again."
   },
   "contact": {
