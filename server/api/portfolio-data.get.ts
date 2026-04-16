@@ -4,7 +4,7 @@ import { usePortfolioData } from '~/composables/usePortfolioData'
 export default defineEventHandler(async (event) => {
   if (process.env.NODE_ENV === 'production') {
     setResponseHeaders(event, {
-      'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
     })
   } else {
     setResponseHeaders(event, {

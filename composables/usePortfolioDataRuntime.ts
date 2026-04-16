@@ -38,8 +38,8 @@ interface PortfolioDataRaw {
 export function usePortfolioDataRuntime() {
   const { data, status } = useFetch<PortfolioDataRaw>('/api/portfolio-data', {
     key: 'portfolio-data-runtime',
-    // SSR-safe: use static data on the server, merge KV data on the client
     lazy: true,
+    getCachedData: () => null, // always fetch fresh from KV
   })
 
   const static_ = usePortfolioData()

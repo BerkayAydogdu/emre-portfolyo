@@ -5,7 +5,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const i18n = nuxtApp.$i18n as any
   if (!i18n?.setLocaleMessage) return
   try {
-    const res = await fetch('/api/portfolio-data')
+    const res = await fetch(`/api/portfolio-data?_=${Date.now()}`, { cache: 'no-store' })
     if (!res.ok) return
     const data = await res.json()
     const locales = data?._locales
