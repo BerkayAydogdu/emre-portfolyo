@@ -134,7 +134,7 @@
       :ui="dizinModalUi"
     >
       <template #body>
-        <div class="dizin-cms-scroll">
+        <div class="dizin-cms-scroll" data-lenis-prevent="true" style="max-height: 80vh; overflow-y: auto; overscroll-behavior: contain; padding-bottom: 2rem;">
           <div class="dizin-cms-grid">
             <div class="dizin-cms-form">
               <UCard class="cms-card cms-card-pad">
@@ -269,7 +269,7 @@
       :ui="itemModalUi"
     >
       <template #body>
-        <div class="item-cms-scroll">
+        <div class="item-cms-scroll" data-lenis-prevent="true" style="max-height: 80vh; overflow-y: auto; overscroll-behavior: contain; padding-bottom: 2rem;">
           <div class="item-cms-grid">
             <div class="item-cms-form">
               <UCard class="cms-card cms-card-pad">
@@ -487,18 +487,18 @@ const emit = defineEmits<{
 const saving = ref(false)
 const itemSaveFlash = ref(false)
 
-/* Nuxt UI modal body defaults to overflow-y-auto — never override with overflow-hidden */
+/* Let the modal grow infinitely; Headless UI overlay will scroll it naturally */
 const itemModalUi = {
-  content: 'max-w-[min(98vw,82rem)] w-full min-h-0',
+  content: 'max-w-[min(98vw,82rem)] w-full',
   header: 'shrink-0',
-  body: 'p-0 sm:p-0 flex-1 min-h-0 overflow-y-auto overscroll-contain',
+  body: 'p-0 sm:p-0',
   footer: 'border-t border-neutral-100 shrink-0',
 }
 
 const dizinModalUi = {
-  content: 'max-w-[min(96vw,56rem)] w-full min-h-0',
+  content: 'max-w-[min(96vw,56rem)] w-full',
   header: 'shrink-0',
-  body: 'p-0 sm:p-0 flex-1 min-h-0 overflow-y-auto overscroll-contain',
+  body: 'p-0 sm:p-0',
   footer: 'border-t border-neutral-100 shrink-0',
 }
 
@@ -651,26 +651,7 @@ function getItemCount(tab: DigitalMindDizin) {
 const itemModalOpen = ref(false)
 const editingItem = ref<any>(null)
 
-/* ── body scroll lock: prevent page scroll while any modal is open ─────────── */
-function setBodyScroll(locked: boolean) {
-  if (typeof document === 'undefined') return
-  const scrollY = locked ? window.scrollY : 0
-  document.documentElement.style.overflow = locked ? 'hidden' : ''
-  document.body.style.overflow = locked ? 'hidden' : ''
-  if (locked) {
-    document.body.style.position = 'fixed'
-    document.body.style.top = `-${scrollY}px`
-    document.body.style.width = '100%'
-  } else {
-    const top = document.body.style.top
-    document.body.style.position = ''
-    document.body.style.top = ''
-    document.body.style.width = ''
-    window.scrollTo(0, parseInt(top || '0') * -1)
-  }
-}
-watch([dizinModalOpen, itemModalOpen], ([d, i]) => setBodyScroll(d || i))
-onUnmounted(() => setBodyScroll(false))
+/* ── body scroll lock is handled natively by Nuxt UI UModal ─────────── */
 
 const itemForm = reactive({
   dizinId: '',

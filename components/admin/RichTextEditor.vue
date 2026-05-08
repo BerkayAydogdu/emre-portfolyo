@@ -142,7 +142,7 @@
     </div>
 
     <!-- Visual editor -->
-    <EditorContent v-if="!showHtml" :editor="editor" class="rte-content" />
+    <EditorContent v-if="!showHtml" :editor="editor" class="rte-content" data-lenis-prevent="true" />
 
     <!-- Raw HTML fallback -->
     <textarea
@@ -150,6 +150,7 @@
       v-model="rawHtml"
       class="rte-html"
       spellcheck="false"
+      data-lenis-prevent="true"
       @blur="syncFromHtml"
     />
   </div>
