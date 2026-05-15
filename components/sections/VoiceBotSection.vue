@@ -1,7 +1,6 @@
 <template>
   <section id="voice" ref="sectionEl" class="voice-section">
     <canvas ref="canvasEl" class="voice-canvas" aria-hidden="true" />
-    <div class="bg-glow" aria-hidden="true" />
 
     <div
       class="spectrum-container"
@@ -154,27 +153,10 @@ function tickVolume() {
   smoothedVol += (targetVol - smoothedVol) * 0.14
 }
 
-// ── Silk-ribbon dual-bundle visualiser ───────────────────────
-// Two bundles of sine lines:
-//   Bundle A  phases 0 → π   → CYAN  → clusters at the TOP peaks
-//   Bundle B  phases π → 2π  → PURPLE → clusters at the BOTTOM peaks
-// At the zero-crossings the two bundles interleave and spread →
-// the distinct "X crossing" and silk-ribbon look from the reference.
-// Additive opacity stacking creates the bright ribbon bands automatically
-// — no per-line glow needed.
-
-const N_BUNDLE = 90   // lines per bundle (180 total)
-const FREQ     = 1.6  // ~1.6 full sine cycles across the canvas
-
-// Precomputed per-line data (immutable after init)
-const bundleA = Array.from({ length: N_BUNDLE }, (_, i) => ({
-  phase: (i / (N_BUNDLE - 1)) * Math.PI,                       // 0 → π
-  jitter: 1 + (i / (N_BUNDLE - 1) - 0.5) * 0.06,              // ±3 % freq variation
-}))
-const bundleB = Array.from({ length: N_BUNDLE }, (_, i) => ({
-  phase: Math.PI + (i / (N_BUNDLE - 1)) * Math.PI,             // π → 2π
-  jitter: 1 + (i / (N_BUNDLE - 1) - 0.5) * 0.06,
-}))
+// ── Filled audio waveform visualiser ─────────────────────────
+// Cyan → blue → purple → magenta dolgu waveform.
+// Üst: kapalı dolgu alan. Alt: yansıma (soluk). Merkez ince çizgi.
+// 4 frekans bileşeni üst üste → organik, sivri peak görünümü.
 
 const spectrumCanvasEl = ref<HTMLCanvasElement>()
 let animFrame   : number | null = null
@@ -189,44 +171,50 @@ function resizeSpectrumCanvas() {
   c.height = r.height * spectrumDpr
 }
 
-function drawBundle(
-  ctx: CanvasRenderingContext2D,
-  bundle: { phase: number; jitter: number }[],
-  W: number, H: number, cy: number,
-  AMP: number,
-  rr: number, gg: number, bb: number,
-) {
-  // Pass 1 — thin core lines (additive stacking gives bright ribbon band)
-  ctx.shadowBlur = 0
-  ctx.lineWidth  = 0.9
-  for (const line of bundle) {
-    const alpha = 0.095
-    ctx.beginPath()
-    ctx.strokeStyle = `rgba(${rr},${gg},${bb},${alpha})`
-    for (let xi = 0; xi <= Math.ceil(W); xi++) {
-      const nx = xi / W
-      const y  = cy + AMP * Math.sin(nx * FREQ * line.jitter * Math.PI * 2 + line.phase + animTime)
-      if (xi === 0) ctx.moveTo(xi, y); else ctx.lineTo(xi, y)
-    }
-    ctx.stroke()
-  }
+// Kenarları yumuşatır (çok kenarda genlik 0'a iner)
+function edgeTaper(nx: number): number {
+  return Math.min(nx / 0.06, (1 - nx) / 0.06, 1)
+}
 
-  // Pass 2 — sparse glow pass (every 4th line, wider+blurry)
-  ctx.shadowColor = `rgba(${rr},${gg},${bb},0.9)`
-  ctx.lineWidth   = 1.4
-  for (let i = 0; i < bundle.length; i += 4) {
-    const line  = bundle[i]
-    const alpha = 0.055
-    ctx.shadowBlur  = 14
-    ctx.beginPath()
-    ctx.strokeStyle = `rgba(${rr},${gg},${bb},${alpha})`
-    for (let xi = 0; xi <= Math.ceil(W); xi++) {
-      const nx = xi / W
-      const y  = cy + AMP * Math.sin(nx * FREQ * line.jitter * Math.PI * 2 + line.phase + animTime)
-      if (xi === 0) ctx.moveTo(xi, y); else ctx.lineTo(xi, y)
-    }
-    ctx.stroke()
+// W genişliğinde yükseklik örnekleri üretir
+function buildHeights(W: number, maxAMP: number, tOffset = 0): number[] {
+  const N = 420
+  const t = animTime + tOffset
+  const out = new Array(N)
+  for (let i = 0; i < N; i++) {
+    const nx = i / (N - 1)
+    const raw =
+      0.36 * Math.abs(Math.sin(nx * Math.PI *  9.5 + t * 1.30)) +
+      0.27 * Math.abs(Math.sin(nx * Math.PI *  6.1 + t * 0.90 + 1.1)) +
+      0.22 * Math.abs(Math.sin(nx * Math.PI * 14.7 + t * 1.65 + 2.4)) +
+      0.15 * Math.abs(Math.sin(nx * Math.PI *  3.8 + t * 0.55 + 0.8))
+    out[i] = maxAMP * raw * edgeTaper(nx)
   }
+  return out
+}
+
+// cy'ye göre dolgu: dir=-1 yukarı, dir=+1 aşağı
+function fillWave(
+  ctx  : CanvasRenderingContext2D,
+  W    : number, cy: number,
+  hArr : number[],
+  grad : CanvasGradient,
+  dir  : 1 | -1,
+  alpha: number,
+) {
+  ctx.save()
+  ctx.globalAlpha = alpha
+  ctx.beginPath()
+  ctx.moveTo(0, cy)
+  const n = hArr.length
+  for (let i = 0; i < n; i++) {
+    ctx.lineTo((i / (n - 1)) * W, cy + dir * hArr[i])
+  }
+  ctx.lineTo(W, cy)
+  ctx.closePath()
+  ctx.fillStyle = grad
+  ctx.fill()
+  ctx.restore()
 }
 
 function drawSpectrum() {
@@ -235,8 +223,7 @@ function drawSpectrum() {
   const ctx = canvas.getContext('2d'); if (!ctx) return
 
   tickVolume()
-  // Wave travels left; speed increases with volume while listening
-  animTime += isListening.value ? 0.009 + smoothedVol * 0.007 : 0.005
+  animTime += isListening.value ? 0.014 + smoothedVol * 0.010 : 0.006
 
   const W  = canvas.width  / spectrumDpr
   const H  = canvas.height / spectrumDpr
@@ -246,13 +233,40 @@ function drawSpectrum() {
   ctx.save()
   ctx.scale(spectrumDpr, spectrumDpr)
 
-  const vol = Math.max(0.22, smoothedVol * 1.5)
-  const AMP = H * 0.46 * vol  // nearly fills canvas height
+  const vol    = Math.max(0.30, smoothedVol * 1.5)
+  const maxAMP = H * 0.58 * vol
 
-  // Bundle A — CYAN  #06b6d4
-  drawBundle(ctx, bundleA, W, H, cy, AMP,  6, 182, 212)
-  // Bundle B — PURPLE #7c3aed
-  drawBundle(ctx, bundleB, W, H, cy, AMP, 124,  58, 237)
+  // Soldan sağa: cyan → mavi → mor → magenta
+  const grad = ctx.createLinearGradient(0, 0, W, 0)
+  grad.addColorStop(0,    '#00e5ff')
+  grad.addColorStop(0.28, '#3b82f6')
+  grad.addColorStop(0.60, '#8b5cf6')
+  grad.addColorStop(1.0,  '#ec4899')
+
+  const h1 = buildHeights(W, maxAMP)
+  const h2 = buildHeights(W, maxAMP * 0.70, 0.55)  // hafif faz kaymalı ikinci katman
+
+  // Dış glow (önce bulanık geçiş çizilir)
+  ctx.shadowColor = 'rgba(120, 60, 255, 0.50)'
+  ctx.shadowBlur  = 40
+  fillWave(ctx, W, cy, h1, grad, -1, 0.55)
+  ctx.shadowBlur = 0
+
+  // Ana dolgu — tam opak
+  fillWave(ctx, W, cy, h1, grad, -1, 1.00)
+  // İkinci katman — derinlik
+  fillWave(ctx, W, cy, h2, grad, -1, 0.55)
+
+  // Merkez çizgisi
+  ctx.beginPath()
+  ctx.moveTo(0, cy); ctx.lineTo(W, cy)
+  ctx.strokeStyle = 'rgba(200, 180, 255, 0.55)'
+  ctx.lineWidth   = 0.8
+  ctx.stroke()
+
+  // Yansıma (aşağı, soluk)
+  fillWave(ctx, W, cy, h1, grad,  1, 0.28)
+  fillWave(ctx, W, cy, h2, grad,  1, 0.13)
 
   ctx.restore()
   animFrame = requestAnimationFrame(drawSpectrum)
@@ -304,17 +318,11 @@ onUnmounted(() => {
   gap: 3rem; padding: 6rem 1.5rem; overflow: hidden; background-color: var(--bg);
 }
 
-.bg-glow {
-  position: absolute; top: 50%; left: 50%; translate: -50% -50%;
-  width: 800px; height: 800px; border-radius: 50%;
-  background: radial-gradient(circle,rgba(6,182,212,0.05) 0%,rgba(124,58,237,0.04) 40%,transparent 70%);
-  pointer-events: none;
-}
 
 .spectrum-container {
   position: relative; z-index: 2;
-  width: min(820px, 96vw); height: 280px;
-  cursor: pointer; outline: none; border-radius: 0.75rem;
+  width: min(960px, 100vw); height: 500px;
+  cursor: pointer; outline: none;
   transition: filter 0.4s;
 }
 .spectrum-container:hover { filter: brightness(1.10); }
@@ -446,7 +454,7 @@ onUnmounted(() => {
 .slide-up-enter-from, .slide-up-leave-to { opacity: 0; transform: translateY(12px); }
 
 @media (max-width: 600px) {
-  .spectrum-container { height: 190px; }
+  .spectrum-container { height: 260px; }
   .fallback-input-wrap { max-width: 100%; }
 }
 </style>
