@@ -1,7 +1,7 @@
 <template>
   <div>
-    <HeroSection />
     <VoiceBotSection />
+    <HeroSection />
     <AboutSection />
     <SocialMarquee />
     

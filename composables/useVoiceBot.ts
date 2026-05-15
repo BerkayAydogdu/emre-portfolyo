@@ -58,26 +58,23 @@ export function useVoiceBot() {
       recognition.value.maxAlternatives = 1
 
       recognition.value.onresult = (e: any) => {
-        let finalTranscript = ''
-        let interimTranscript = ''
-
+        let finalText = ''
+        let interimText = ''
         for (let i = 0; i < e.results.length; i++) {
-          const result = e.results[i]
-          if (result.isFinal) {
-            finalTranscript += result[0].transcript
-          } else {
-            interimTranscript += result[0].transcript
-          }
+          if (e.results[i].isFinal) finalText  += e.results[i][0].transcript
+          else                       interimText += e.results[i][0].transcript
         }
-
-        transcript.value = finalTranscript || interimTranscript
+        transcript.value = finalText + interimText
       }
 
       recognition.value.onend = () => {
-        isListening.value = false
-        if (transcript.value.trim()) {
-          sendToAI(lang)
+        // If user didn't manually stop and we have no transcript yet, restart
+        if (isListening.value && !transcript.value.trim()) {
+          try { recognition.value.start() } catch { isListening.value = false }
+          return
         }
+        isListening.value = false
+        if (transcript.value.trim()) sendToAI(lang)
       }
 
       recognition.value.onerror = (e: any) => {
@@ -121,10 +118,8 @@ export function useVoiceBot() {
   }
 
   function stopListening() {
-    try {
-      recognition.value?.stop()
-    } catch {}
-    isListening.value = false
+    isListening.value = false   // set BEFORE stop() so onend doesn't restart
+    try { recognition.value?.stop() } catch {}
   }
 
   /**
