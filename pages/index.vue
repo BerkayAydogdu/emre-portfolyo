@@ -1,6 +1,5 @@
 <template>
   <div>
-    <VoiceBotSection />
     <HeroSection />
     <AboutSection />
     <SocialMarquee />

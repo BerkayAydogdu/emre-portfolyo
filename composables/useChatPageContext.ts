@@ -30,8 +30,7 @@ function withBodyFallbackProject(p: Project, staticProjects: Project[]): Project
 
 const HOME_SECTIONS: Record<string, { tr: string; en: string }> = {
   '': { tr: 'Ana sayfa — portfolyonun genel görünümü', en: 'Home page — portfolio overview' },
-  '#hero': { tr: 'Hero bölümü — giriş ve tanıtım', en: 'Hero section — introduction' },
-  '#voice': { tr: 'Sesli asistan bölümü', en: 'Voice assistant section' },
+  '#hero': { tr: 'Hero bölümü — giriş, tanıtım ve sesli AI asistan', en: 'Hero section — introduction and AI voice assistant' },
   '#about': { tr: 'Hakkımda bölümü', en: 'About section' },
   '#digital-mind': { tr: 'The Digital Mind — projeler ve yazılar klasör görünümü', en: 'The Digital Mind — projects and articles library view' },
   '#references': { tr: 'Referanslar bölümü', en: 'Testimonials section' },
