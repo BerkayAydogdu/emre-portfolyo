@@ -51,7 +51,7 @@
                 v-for="item in currentItems"
                 :key="item.id"
                 class="os-card"
-                @click="openPreviewModal(item)"
+                @click="goToDetail(item)"
               >
                 <div class="card-img-wrap">
                   <img v-if="item.image" :src="item.image" :alt="getI18nObjTitle(item)" class="card-img" />
@@ -61,6 +61,7 @@
                 </div>
                 <div class="card-body">
                   <h3 class="card-title">{{ getI18nObjTitle(item) }}</h3>
+                  <p v-if="getI18nObjDesc(item)" class="card-desc">{{ getI18nObjDesc(item) }}</p>
                 </div>
               </div>
             </TransitionGroup>
@@ -79,56 +80,13 @@
         </div>
       </div>
     </div>
-
-    <!-- PREVIEW MODAL — Teleported to body so it escapes overflow:hidden + backdrop-filter -->
-    <Teleport to="body">
-      <Transition name="modal-fade">
-        <div
-          v-if="isPreviewOpen"
-          class="dm-modal-overlay"
-          @click.self="isPreviewOpen = false"
-        >
-          <div v-if="selectedObj" class="dm-modal-box">
-
-            <!-- Header -->
-            <div class="dm-modal-head">
-              <div class="dm-modal-head-left">
-                <span class="dm-modal-badge">
-                  {{ activeTabConfig?.label.split('.')[0] }}
-                </span>
-                <h3 class="dm-modal-title">{{ getI18nObjTitle(selectedObj) }}</h3>
-              </div>
-              <button class="dm-modal-close" @click="isPreviewOpen = false">✕</button>
-            </div>
-
-            <!-- Image -->
-            <div class="dm-modal-img-wrap">
-              <img v-if="selectedObj.image" :src="selectedObj.image" class="dm-modal-img" />
-              <div v-else class="dm-modal-img-placeholder">
-                <UIcon name="i-lucide-monitor" />
-              </div>
-            </div>
-
-            <!-- Description -->
-            <p class="dm-modal-desc">{{ getI18nObjDesc(selectedObj) }}</p>
-
-            <!-- Footer -->
-            <div class="dm-modal-footer">
-              <button class="dm-modal-cta" @click="goToDetail(selectedObj)">
-                Detayları ve Dosyayı Aç →
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
   </section>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import type { DigitalMindDizin, Project, Article } from '~/composables/usePortfolioData'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -138,7 +96,7 @@ const { projects, articles, digitalMind } = usePortfolioDataRuntime()
 const isSidebarCollapsed = ref(false)
 
 // ── TABS — driven by portfolio data ──────────────────────────────────────────
-const osTabs = computed(() => digitalMind.value?.tabs ?? [
+const osTabs = computed<DigitalMindDizin[]>(() => digitalMind.value?.tabs ?? [
   { id: 'arastirmalar', label: 'ARAŞTIRMALAR.exe', icon: 'i-lucide-folder-git-2',  source: 'projects' as const,  filterType: 'arastirma' },
   { id: 'projeler',     label: 'PROJELER.app',     icon: 'i-lucide-monitor-play',   source: 'projects' as const,  filterType: 'yazi'      },
   { id: 'dusunceler',   label: 'DÜŞÜNCELER.txt',   icon: 'i-lucide-file-text',      source: 'articles' as const,  filterType: 'dusunce'   },
@@ -149,7 +107,7 @@ const appTitle = computed(() => digitalMind.value?.title ?? 'The Digital Mind')
 const appSubtitle = computed(() => digitalMind.value?.subtitle ?? 'Burada araştırma, proje ve teknik yolculuğumu paylaşıyorum — kalıcı, kişisel ve her an çalışan kütüphanem.')
 
 const activeOsTab = ref<string | null>(null)
-const activeTabConfig = computed(() => osTabs.value.find(t => t.id === activeOsTab.value))
+const activeTabConfig = computed(() => osTabs.value.find((tab: DigitalMindDizin) => tab.id === activeOsTab.value))
 
 const dmChatCtx = useDigitalMindUiContext()
 
@@ -163,7 +121,7 @@ function onSelectTab(id: string) {
 
 watch(
   osTabs,
-  (tabs) => {
+  (tabs: DigitalMindDizin[]) => {
     if (tabs.length && activeOsTab.value == null) {
       activeOsTab.value = tabs[0].id
     }
@@ -174,7 +132,7 @@ watch(
 watch(
   [activeOsTab, osTabs],
   () => {
-    const tab = osTabs.value.find(t => t.id === activeOsTab.value)
+    const tab = osTabs.value.find((item: DigitalMindDizin) => item.id === activeOsTab.value)
     if (tab) {
       dmChatCtx.value = {
         label: tab.label,
@@ -194,9 +152,9 @@ const currentItems = computed(() => {
   const cfg = activeTabConfig.value
   if (!cfg) return []
   if (cfg.source === 'projects') {
-    return projects.value.filter(p => p.type === cfg.filterType).map(p => ({ ...p, _kind: 'project' }))
+    return projects.value.filter((p: Project) => p.type === cfg.filterType).map((p: Project) => ({ ...p, _kind: 'project' as const }))
   } else if (cfg.source === 'articles') {
-    return articles.value.filter(a => a.type === cfg.filterType).map(a => ({ ...a, _kind: 'article' }))
+    return articles.value.filter((a: Article) => a.type === cfg.filterType).map((a: Article) => ({ ...a, _kind: 'article' as const }))
   }
   return []
 })
@@ -207,20 +165,12 @@ function getI18nObjTitle(item: any) {
 
 function getI18nObjDesc(item: any) {
   const key = item.descriptionKey || item.excerptKey || ''
-  return t(key)
-}
-
-// ── MODAL ─────────────────────────────────────────────────────────────────────
-const isPreviewOpen = ref(false)
-const selectedObj = ref<any>(null)
-
-function openPreviewModal(item: any) {
-  selectedObj.value = item
-  isPreviewOpen.value = true
+  if (!key) return ''
+  const val = t(key)
+  return val === key ? '' : val
 }
 
 function goToDetail(item: any) {
-  isPreviewOpen.value = false
   if (item._kind === 'article') {
     router.push(`/yazi/${item.slug}`)
   } else if (item._kind === 'project') {
@@ -488,6 +438,17 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+.card-desc {
+  margin: 0.45rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .empty-state {
   position: absolute;
   top: 50%;
@@ -546,168 +507,5 @@ onUnmounted(() => {
   }
   .sidebar-system-info { display: none; }
   .os-tab-btn { width: auto; padding: 0.5rem 1rem; font-size: 0.85rem; }
-}
-</style>
-
-<!-- ─────────────────────────────────────────────────────────────────────────
-     UNSCOPED — modal styles only.
-     Must be unscoped because <Teleport to="body"> renders outside this
-     component's DOM subtree, so Vue's scoped data-v-* selectors never
-     get attached to the teleported elements.
-──────────────────────────────────────────────────────────────────────────── -->
-<style>
-/* Overlay */
-.dm-modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-/* Box */
-.dm-modal-box {
-  background: var(--surface);
-  border: var(--glow-border);
-  border-radius: 16px;
-  width: 100%;
-  max-width: 560px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.4);
-  scrollbar-width: thin;
-  scrollbar-color: rgba(124,58,237,0.3) transparent;
-}
-
-/* Header */
-.dm-modal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border-subtle);
-}
-.dm-modal-head-left {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-width: 0;
-}
-.dm-modal-badge {
-  flex-shrink: 0;
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 0.2rem 0.65rem;
-  border-radius: 9999px;
-  background: rgba(124, 58, 237, 0.1);
-  color: var(--primary);
-  border: 1px solid rgba(124, 58, 237, 0.3);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.dm-modal-title {
-  color: var(--text-base);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.dm-modal-close {
-  flex-shrink: 0;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 1rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0.3rem 0.5rem;
-  border-radius: 6px;
-  transition: color 0.2s, background 0.2s;
-}
-.dm-modal-close:hover {
-  color: var(--text-base);
-  background: rgba(124, 58, 237, 0.1);
-}
-
-/* Image */
-.dm-modal-img-wrap {
-  width: 100%;
-  height: 220px;
-  background: var(--bg);
-  overflow: hidden;
-}
-.dm-modal-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.dm-modal-img-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 3rem;
-  opacity: 0.5;
-}
-
-/* Description */
-.dm-modal-desc {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  padding: 1.5rem;
-  margin: 0;
-}
-
-/* Footer */
-.dm-modal-footer {
-  padding: 0 1.5rem 1.5rem;
-}
-.dm-modal-cta {
-  width: 100%;
-  padding: 0.85rem 1.5rem;
-  background: #7c3aed;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-}
-.dm-modal-cta:hover {
-  background: #6d28d9;
-  transform: scale(1.01);
-}
-
-/* Transition */
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-  transition: opacity 0.25s ease;
-}
-.modal-fade-enter-active .dm-modal-box,
-.modal-fade-leave-active .dm-modal-box {
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-.modal-fade-enter-from,
-.modal-fade-leave-to {
-  opacity: 0;
-}
-.modal-fade-enter-from .dm-modal-box,
-.modal-fade-leave-to .dm-modal-box {
-  transform: translateY(16px) scale(0.97);
-  opacity: 0;
 }
 </style>

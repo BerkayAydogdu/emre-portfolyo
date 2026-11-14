@@ -39,7 +39,7 @@ export function usePortfolioDataRuntime() {
   const { data, status } = useFetch<PortfolioDataRaw>('/api/portfolio-data', {
     key: 'portfolio-data-runtime',
     lazy: true,
-    getCachedData: () => null, // always fetch fresh from KV
+    getCachedData: () => undefined, // always fetch fresh from KV
   })
 
   const static_ = usePortfolioData()
