@@ -17,25 +17,25 @@ const { t, locale } = useI18n()
 useHead({
   title: computed(() =>
     locale.value === 'tr'
-      ? 'Emre — Dijital Antropolog & Düşünce Üreticisi'
-      : 'Emre — Digital Anthropologist & Thought Producer'
+      ? 'Emre Çete Portföy Sayfası'
+      : 'Emre Çete Portfolio Page'
   ),
   meta: [
     {
       name: 'description',
       content: computed(() =>
         locale.value === 'tr'
-          ? 'Teknoloji, kültür ve insan ilişkilerinin kesişim noktasında çalışan dijital antropolog ve araştırmacı.'
-          : 'A digital anthropologist and researcher working at the intersection of technology, culture, and human relations.'
+          ? 'Dijital iletişim, medya çalışmaları, yazılar, projeler, araştırmalar...'
+          : 'Digital communication, media studies, writings, projects, researches...'
       ),
     },
     {
       property: 'og:title',
-      content: 'Emre — Digital Anthropologist',
+      content: 'Emre Çete Portfolio Page',
     },
     {
       property: 'og:description',
-      content: 'Teknoloji, kültür ve insan ilişkilerinin kesişim noktasında çalışan araştırmacı.',
+      content: 'Digital communication, media studies, writings, projects, researches...',
     },
   ],
 })
