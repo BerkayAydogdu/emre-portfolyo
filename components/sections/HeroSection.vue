@@ -143,16 +143,6 @@
           </template>
         </div>
       </div>
-
-      <!-- 3. Keşfet Butonu (En Altta) -->
-      <a
-        href="#about"
-        class="hero-cta"
-        @click.prevent="scrollToAbout"
-      >
-        {{ kvt('hero.cta') }}
-        <span class="cta-arrow">↓</span>
-      </a>
     </div>
 
     <!-- Scroll indicator -->
@@ -437,7 +427,6 @@ function runEntrance() {
   gsap.set('.hero-name', { opacity: 0, y: 40 })
   gsap.set('.hero-subtitle-wrap', { opacity: 0, y: 18 })
   gsap.set('.hero-role-wrap', { opacity: 0, y: 14 })
-  gsap.set('.hero-cta', { opacity: 0, y: 16 })
   gsap.set('.spectrum-container', { opacity: 0, y: 24 })
   if (btnEl.value) gsap.set(btnEl.value, { opacity: 0, y: 16 })
   gsap.set('.scroll-indicator', { opacity: 0 })
@@ -451,12 +440,7 @@ function runEntrance() {
   if (btnEl.value) {
     tl.to(btnEl.value, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.45')
   }
-  tl.to('.hero-cta', { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.3')
-    .to('.scroll-indicator', { opacity: 1, duration: 0.55, ease: 'power2.out' }, '-=0.2')
-}
-
-function scrollToAbout() {
-  document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })
+  tl.to('.scroll-indicator', { opacity: 1, duration: 0.55, ease: 'power2.out' }, '-=0.2')
 }
 
 onMounted(() => {
@@ -519,12 +503,11 @@ watch(locale, () => {
 .hero {
   position: relative;
   width: 100%;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(4.75rem, 7vh, 6rem) 1.5rem 4.75rem;
+  padding: clamp(12rem, 18vh, 20rem) 1.5rem 5rem;
   overflow: hidden;
   background-color: var(--bg);
   transition: background-color 0.3s;
@@ -644,39 +627,6 @@ watch(locale, () => {
 
 @keyframes blink {
   50% { opacity: 0; }
-}
-
-.hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1.75rem;
-  border: 1px solid rgba(167, 139, 250, 0.35);
-  border-radius: 9999px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-base);
-  text-decoration: none;
-  transition: all 0.3s;
-  backdrop-filter: blur(4px);
-  background: rgba(124, 58, 237, 0.08);
-}
-
-.hero-cta:hover {
-  background: rgba(124, 58, 237, 0.2);
-  border-color: rgba(167, 139, 250, 0.6);
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
-  transform: translateY(-2px);
-}
-
-.cta-arrow {
-  display: inline-block;
-  animation: float-arrow 1.8s ease-in-out infinite;
-}
-
-@keyframes float-arrow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
 }
 
 /* ─── 2. AI Voice Spectrum & Controls ──────────────────────────── */
@@ -1014,16 +964,14 @@ watch(locale, () => {
 
 /* ─── Scroll Indicator ─────────────────────────────────────────── */
 .scroll-indicator {
-  position: absolute;
-  bottom: 1.25rem;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   z-index: 2;
+  margin-top: 1.5rem;
 }
 
 .scroll-line {
   width: 1px;
-  height: 40px;
+  height: 32px;
   margin: 0 auto;
   background: linear-gradient(to bottom, var(--primary-glow), transparent);
   animation: scroll-drop 2s ease-in-out infinite;
@@ -1033,6 +981,12 @@ watch(locale, () => {
   0% { opacity: 0; transform: scaleY(0); transform-origin: top; }
   50% { opacity: 1; }
   100% { opacity: 0; transform: scaleY(1); transform-origin: top; }
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding-top: clamp(15rem, 27vh, 21rem);
+  }
 }
 
 @media (max-width: 600px) {

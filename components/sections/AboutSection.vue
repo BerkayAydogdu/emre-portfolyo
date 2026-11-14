@@ -1,5 +1,5 @@
 <template>
-  <section id="about" class="section grid-bg">
+  <section id="about" class="section grid-bg about-section">
     <div class="section-inner about-grid">
       <!-- Left: Photo -->
       <div ref="photoEl" class="about-photo-wrap">
@@ -89,6 +89,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.about-section {
+  padding-top: 5rem;
+}
+
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1.4fr;
